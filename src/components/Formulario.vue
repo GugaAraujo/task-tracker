@@ -38,8 +38,6 @@ export default defineComponent({
     },
     methods: {
         finalizarTarefa (tempoDecorrido: number): void {
-            alert(`${this.descricao}: ${tempoDecorrido}`)
-            
             this.$emit('aoSalvarTarefa',{
               duracaoEmSegundos: tempoDecorrido,
               descricao: this.descricao
