@@ -1,15 +1,17 @@
+import { INotificacao } from "@/interfaces/INotificacao";
 import IProjeto from "@/interfaces/IProjeto";
 import ITarefa from "@/interfaces/Itarefa";
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
-import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ATUALIZA_TAREFA, EXCLUIR_PROJETO, REMOVE_TAREFA } from "./tipo-mutacoes";
+import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ATUALIZA_TAREFA, EXCLUIR_PROJETO, NOTIFICAR, REMOVE_TAREFA } from "./tipo-mutacoes";
 
 // No Vuex 4, além de exportamos o store, precisamos
 // exportar também uma chave de acesso
 
 interface Estado {
     projetos: IProjeto[],
-    tarefas: ITarefa[]
+    tarefas: ITarefa[],
+    notificacoes: INotificacao[]
 }
 
 export const key: InjectionKey<Store<Estado>> = Symbol()
@@ -19,6 +21,7 @@ export const store = createStore<Estado>({
     state: {
         projetos: [],
         tarefas: [],
+        notificacoes: [],
     },
 
     mutations: {
@@ -43,11 +46,22 @@ export const store = createStore<Estado>({
             state.tarefas.push(tarefa);
         },
         [ATUALIZA_TAREFA](state, tarefa: ITarefa) {
-            const indice = state.tarefas.findIndex((p) => p.id == tarefa.id);
+            const indice = state.tarefas.findIndex((projeto) => projeto.id == tarefa.id);
             state.tarefas[indice] = tarefa;
         },
         [REMOVE_TAREFA](state, id: string) {
-            state.projetos = state.projetos.filter((p) => p.id != id);
+            state.projetos = state.projetos.filter((projeto) => projeto.id != id);
+        },
+        [NOTIFICAR](state, novaNotificacao: INotificacao) {
+            
+            novaNotificacao.id = new Date().getTime()
+            state.notificacoes.push(novaNotificacao)
+
+            setTimeout(() => {
+                state.notificacoes = state.notificacoes.filter(
+                    (notificacao) => notificacao.id != novaNotificacao.id
+                );
+            }, 3000);
         }
     },
 });
