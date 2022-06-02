@@ -21,10 +21,11 @@
 
 <script lang="ts">
 import { TipoNotificacao } from "@/interfaces/INotificacao";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useStore } from "../../store";
 import useNotificador from "@/hooks/notificador";
 import { ALTERAR_PROJETO, CADASTRAR_PROJETOS } from "@/store/tipo-acoes";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Formulario",
@@ -33,48 +34,49 @@ export default defineComponent({
       type: String,
     },
   },
+  setup(props) {
+    const router = useRouter();
 
-  mounted() {
-    if (this.id) {
-      const projeto = this.store.state.projeto.projetos.find(
-        (proj) => proj.id == this.id
-      );
-      this.nomeDoProjeto = projeto?.nome || "";
-    }
-  },
-  data() {
-    return {
-      nomeDoProjeto: "",
-    };
-  },
-  methods: {
-    salvar() {
-      if (this.id) {
-        this.store.dispatch(ALTERAR_PROJETO, {
-          id: this.id,
-          nome: this.nomeDoProjeto,
-        }).then(() => this.aoSalvarProjeto())
-      } else {
-        this.store.dispatch(CADASTRAR_PROJETOS, this.nomeDoProjeto)
-          .then(() => this.aoSalvarProjeto())
-      }  
-    },
-    aoSalvarProjeto(){
-		this.nomeDoProjeto = "";
-		this.notificar(
-			TipoNotificacao.SUCESSO,
-			"Novo projeto salvo",
-			"Seu projeto já está disponível"
-		);
-		this.$router.push("/projetos");
-    }
-  },
-  setup() {
     const store = useStore();
     const { notificar } = useNotificador();
+
+    const nomeDoProjeto = ref("");
+
+    if (props.id) {
+      const projeto = store.state.projeto.projetos.find(
+        (proj) => proj.id == props.id
+      );
+      nomeDoProjeto.value = projeto?.nome || "";
+    }
+
+    const salvar = () => {
+      if (props.id) {
+        store
+          .dispatch(ALTERAR_PROJETO, {
+            id: props.id,
+            nome: nomeDoProjeto.value,
+          })
+          .then(() => aoSalvarProjeto());
+      } else {
+        store
+          .dispatch(CADASTRAR_PROJETOS, nomeDoProjeto.value)
+          .then(() => aoSalvarProjeto());
+      }
+    };
+
+    const aoSalvarProjeto = () => {
+      nomeDoProjeto.value = "";
+      notificar(
+        TipoNotificacao.SUCESSO,
+        "Novo projeto salvo",
+        "Seu projeto já está disponível"
+      );
+      router.push("/projetos");
+    };
+
     return {
-      store,
-      notificar,
+      nomeDoProjeto,
+      salvar,
     };
   },
 });

@@ -15,6 +15,14 @@
     {
       "nome": "TypeScript",
       "id": 5
+    },
+    {
+      "id": 6,
+      "nome": "Mais um projeto"
+    },
+    {
+      "id": 7,
+      "nome": "Novo Projetinho"
     }
   ],
   "tarefas": [
@@ -53,6 +61,69 @@
         "id": 5
       },
       "id": 4
+    },
+    {
+      "duracaoEmSegundos": 3,
+      "descricao": "Quinta task",
+      "projeto": {
+        "id": 4,
+        "nome": "Novo teste"
+      },
+      "id": 5
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "Sexta Task!",
+      "projeto": {
+        "id": 7,
+        "nome": "Novo Projetinho"
+      },
+      "id": 6
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": {
+        "__v_isShallow": false,
+        "dep": {
+          "w": 0,
+          "n": 0
+        },
+        "__v_isRef": true,
+        "_rawValue": "Sétima task",
+        "_value": "Sétima task"
+      },
+      "projeto": {
+        "id": 3,
+        "nome": "Vue 3"
+      },
+      "id": 7
+    },
+    {
+      "duracaoEmSegundos": 0,
+      "descricao": {
+        "__v_isShallow": false,
+        "dep": {
+          "w": 0,
+          "n": 0
+        },
+        "__v_isRef": true,
+        "_rawValue": "Sétima Task",
+        "_value": "Sétima Task"
+      },
+      "projeto": {
+        "id": 3,
+        "nome": "Vue 3"
+      },
+      "id": 8
+    },
+    {
+      "duracaoEmSegundos": 1,
+      "descricao": "Sétima Task",
+      "projeto": {
+        "id": 3,
+        "nome": "Vue 3"
+      },
+      "id": 9
     }
   ]
 }
