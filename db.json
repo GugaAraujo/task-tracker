@@ -1,0 +1,58 @@
+{
+  "projetos": [
+    {
+      "id": 2,
+      "nome": "Cursos Alura"
+    },
+    {
+      "id": 3,
+      "nome": "Vue 3"
+    },
+    {
+      "id": 4,
+      "nome": "Novo teste"
+    },
+    {
+      "nome": "TypeScript",
+      "id": 5
+    }
+  ],
+  "tarefas": [
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "primeira task",
+      "projeto": {
+        "id": 2,
+        "nome": "Cursos Alura"
+      },
+      "id": 1
+    },
+    {
+      "duracaoEmSegundos": 3,
+      "descricao": "segunda task",
+      "projeto": {
+        "id": 3,
+        "nome": "Vue 3"
+      },
+      "id": 2
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "terceira task",
+      "projeto": {
+        "id": 4,
+        "nome": "Novo teste"
+      },
+      "id": 3
+    },
+    {
+      "duracaoEmSegundos": 5,
+      "descricao": "Quarta Task",
+      "projeto": {
+        "nome": "TypeScript",
+        "id": 5
+      },
+      "id": 4
+    }
+  ]
+}

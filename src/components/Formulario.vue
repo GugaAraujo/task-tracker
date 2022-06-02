@@ -80,7 +80,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     return {
-      projetos: computed(() => store.state.projetos), //computed permitirá que o estado seja computado
+      projetos: computed(() => store.state.projeto.projetos), //computed permitirá que o estado seja computado
       store
     };
   },
