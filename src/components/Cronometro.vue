@@ -1,8 +1,7 @@
 <template>
   <section>
-    <strong class="display">
+      <i class="far fa-clock"></i>
       {{ tempoDecorrido }}
-    </strong>
   </section>
 </template>
 
