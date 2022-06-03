@@ -6,9 +6,9 @@
         <slot name="cabecalho" />
       </header>
       <section class="modal-card-body">
-        <slot name="corpo" />
+        <slot name="corpo"/>
       </section>
-      <footer class="modal-card-foot">
+      <footer class="modal-card-foot is-justify-content-flex-end">
         <slot name="rodape" />
       </footer>
     </div>

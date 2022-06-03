@@ -20,9 +20,10 @@
         v-for="(tarefa, index) in tarefas"
         :key="index"
         :tarefa="tarefa"
+        @aoExcluirTask="abrirModalExcluirTask"
         @aoTarefaClicada="selecionarTarefa"
       />
-      <Modal :mostrarModal="tarefaSelecionada !=null">
+      <Modal :mostrarModal="tarefaSelecionada != null">
         <template v-slot:cabecalho>
           <p class="modal-card-title">Editando uma tarefa</p>
           <button
@@ -49,6 +50,36 @@
           <button @click="fecharModal" class="button">Cancelar</button>
         </template>
       </Modal>
+      <Modal :mostrarModal="taskAhSerExcluida != null">
+        <template v-slot:cabecalho>
+          <p class="modal-card-title">Exclusão de tarefa</p>
+          <button
+            @click="fecharModal"
+            class="delete"
+            aria-label="close"
+          ></button>
+        </template>
+        <template v-slot:corpo>
+          <div class="field">
+            <p>
+              Desja excluir a tarefa 
+                <span class="has-text-weight-medium">
+                  {{ taskAhSerExcluida.descricao }}
+                </span>
+              ?
+            </p>
+          </div>
+        </template>
+        <template v-slot:rodape>
+          <button
+            @click="deletarTask()"
+            class="button is-danger"
+          >
+            Deletar task
+          </button>
+          <button @click="fecharModal" class="button">Cancelar</button>
+        </template>
+      </Modal>
     </div>
   </div>
 </template>
@@ -59,6 +90,7 @@ import {
   CADASTRAR_TAREFAS,
   OBTER_PROJETOS,
   OBTER_TAREFAS,
+  REMOVER_TAREFA,
 } from "@/store/tipo-acoes";
 import { computed, defineComponent, ref, watchEffect } from "vue";
 import Box from "../components/Box.vue";
@@ -67,6 +99,8 @@ import Formulario from "../components/Formulario.vue";
 import Tarefa from "../components/Tarefa.vue";
 import ITarefa from "../interfaces/Itarefa";
 import { useStore } from "../store";
+import { NOTIFICAR } from "@/store/tipo-mutacoes";
+import { TipoNotificacao } from "@/interfaces/INotificacao";
 
 export default defineComponent({
   name: "App",
@@ -74,11 +108,12 @@ export default defineComponent({
     Box,
     Formulario,
     Tarefa,
-    Modal
+    Modal,
   },
   data() {
     return {
       tarefaSelecionada: null as ITarefa | null,
+      taskAhSerExcluida: null as ITarefa | null,
     };
   },
   computed: {
@@ -87,19 +122,44 @@ export default defineComponent({
     },
   },
   methods: {
+    abrirModalExcluirTask(tarefa: ITarefa) {
+      console.log("clicou na lixeira");
+      this.taskAhSerExcluida = tarefa;
+    },
     salvarTarefa(tarefa: ITarefa): void {
       this.store.dispatch(CADASTRAR_TAREFAS, tarefa);
     },
     selecionarTarefa(tarefa: ITarefa) {
+      console.log("clicou em outro lugar");
       this.tarefaSelecionada = tarefa;
     },
     fecharModal() {
       this.tarefaSelecionada = null;
+      this.taskAhSerExcluida = null;
     },
     alterarTarefa() {
       this.store
         .dispatch(ALTERAR_TAREFA, this.tarefaSelecionada)
         .then(() => this.fecharModal());
+    },
+    atualziarTasks(){
+      this.store.dispatch(OBTER_TAREFAS);
+      this.fecharModal()
+    },
+    deletarTask() {
+      try {
+        this.store
+          .dispatch(REMOVER_TAREFA, this.taskAhSerExcluida)
+          .then(() => this.atualziarTasks());
+      } catch (error) {
+        this.fecharModal();
+        this.store.commit(NOTIFICAR, {
+          titulo: "Ops!",
+          texto: "Falha ao deletar",
+          tipo: TipoNotificacao.FALHA,
+        });
+        throw new Error();
+      }
     },
   },
   setup() {
@@ -107,12 +167,6 @@ export default defineComponent({
     store.dispatch(OBTER_TAREFAS);
     store.dispatch(OBTER_PROJETOS);
     const filtro = ref("");
-
-    // const tarefas = computed(() =>
-    //   store.state.tarefas.filter(
-    //     (t) => !filtro.value || t.descricao.includes(filtro.value)
-    //   )
-    // );
 
     watchEffect(() => {
       store.dispatch(OBTER_TAREFAS, filtro.value);

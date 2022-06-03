@@ -1,14 +1,20 @@
 <template>
     <Box>
-        <div class="columns clicavel" @click="tarefaClicada">
-            <div class="column is-4">
+        <div class="columns" >
+            <div class="column is-5">
                 {{ tarefa.descricao || 'Tarefa sem descrição' }}
             </div>
             <div class="column is-3">
                 {{ tarefa.projeto?.nome || "N/D" }}
             </div>
-            <div class="column">
+            <div class="column is-2">
                 <Cromometro :tempoEmSegundos="tarefa.duracaoEmSegundos"/>
+            </div>
+            <div class="column is-1" @click="aoExcluirTask">
+                <i class="fas fa-trash"></i>
+            </div>
+            <div class="column is-1" @click="tarefaClicada">
+                <i class="fas fa-edit"></i>
             </div>
         </div>
     </Box>
@@ -22,7 +28,7 @@ import Box from './Box.vue'
 
 export default defineComponent({
     name: 'Terefa',
-    emits: ['aoTarefaClicada'],
+    emits: ['aoTarefaClicada', 'aoExcluirTask'],
     props: {
         tarefa: {
             type: Object as PropType<ITarefa>,
@@ -32,6 +38,9 @@ export default defineComponent({
     methods: {
         tarefaClicada () : void {
             this.$emit('aoTarefaClicada', this.tarefa)
+        },
+        aoExcluirTask() : void {
+            this.$emit('aoExcluirTask', this.tarefa)
         }
     },
     components: {
@@ -41,9 +50,16 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.clicavel {
+<style lang="scss" scoped>
+i {
     cursor: pointer;
+    transition: all .2s ease-in-out;
+
+    &:hover{
+        transform: scale(1.3);
+        color: hsl(348, 100%, 61%)
+    }
 }
+
 </style>
 

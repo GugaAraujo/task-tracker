@@ -1,37 +1,25 @@
-import { INotificacao } from "@/interfaces/INotificacao";
+import http from "@/http";
 import ITarefa from "@/interfaces/Itarefa";
-import { InjectionKey } from "vue";
-import { createStore, Store, useStore as vuexUseStore } from "vuex";
-import { ALTERAR_TAREFA, CADASTRAR_TAREFAS, OBTER_TAREFAS, REMOVER_TAREFA } from "./tipo-acoes";
+import { Estado } from "@/store";
+import {
+    OBTER_TAREFAS,
+    CADASTRAR_TAREFAS,
+    ALTERAR_TAREFA,
+    REMOVER_TAREFA,
+} from "@/store/tipo-acoes";
 import {
     ADICIONA_TAREFA,
     ALTERA_TAREFA,
     DEFINIR_TAREFAS,
-    NOTIFICAR,
     REMOVE_TAREFA,
-} from "./tipo-mutacoes";
-import http from "@/http";
-import { EstadoProjeto, projeto } from "./modulos/projetos";
-// No Vuex 4, além de exportamos o store, precisamos
-// exportar também uma chave de acesso
+} from "@/store/tipo-mutacoes";
+import { Module } from "vuex";
 
-export interface Estado {
+export interface EstadoTarefa {
     tarefas: ITarefa[];
-    notificacoes: INotificacao[];
-    projeto: EstadoProjeto;
 }
 
-export const key: InjectionKey<Store<Estado>> = Symbol();
-
-export const store = createStore<Estado>({
-    state: {
-        tarefas: [],
-        notificacoes: [],
-        projeto: {
-            projetos: [],
-        },
-    },
-
+export const tarefa: Module<EstadoTarefa, Estado> = {
     mutations: {
         [ADICIONA_TAREFA](state, tarefa: ITarefa) {
             state.tarefas.push(tarefa);
@@ -48,18 +36,7 @@ export const store = createStore<Estado>({
         [REMOVE_TAREFA](state, id: number) {
             state.tarefas = state.tarefas.filter((tarefa) => tarefa.id != id);
         },
-        [NOTIFICAR](state, novaNotificacao: INotificacao) {
-            novaNotificacao.id = new Date().getTime();
-            state.notificacoes.push(novaNotificacao);
-
-            setTimeout(() => {
-                state.notificacoes = state.notificacoes.filter(
-                    (notificacao) => notificacao.id != novaNotificacao.id
-                );
-            }, 3000);
-        },
     },
-
     actions: {
         [OBTER_TAREFAS]({ commit }, filtro: string) {
             let url = "tarefas";
@@ -89,11 +66,4 @@ export const store = createStore<Estado>({
                 });
         },
     },
-    modules: {
-        projeto,
-    },
-});
-
-export function useStore(): Store<Estado> {
-    return vuexUseStore(key);
-}
+};
