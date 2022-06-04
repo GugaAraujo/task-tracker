@@ -1,7 +1,7 @@
 <template>
   <div>
     <Formulario @aoSalvarTarefa="salvarTarefa" />
-    <div class="lista">
+    <div class="lista container is-fluid">
       <div class="field">
         <p class="control has-icons-left">
           <input
@@ -60,7 +60,7 @@
           ></button>
         </template>
         <template v-slot:corpo>
-          <div class="field">
+          <div class="field has-text-centered">
             <p>
               Desja excluir a tarefa 
                 <span class="has-text-weight-medium">
