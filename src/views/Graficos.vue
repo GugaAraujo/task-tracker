@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="card card-grafico">
-      <h2 class="subtitle has-text-centered has-text-weight-bold">Projetos</h2>
+      <h2 class="subtitle has-text-centered has-text-weight-bold">Projetos por tipo</h2>
       <div ref="chartdiv"></div>
     </div>
   </div>
@@ -85,7 +85,6 @@ export default defineComponent({
       return new Date(data * 1000).toISOString().substr(11, 8);
     },
     obtemProjetos() {
-
       let projetos = [];
       return fetch(`https://fakeapi-service.herokuapp.com/projetos`)
         .then((data) => data.json())
@@ -131,6 +130,9 @@ export default defineComponent({
       chart.legend.valueLabels.template.text =
         "{quantidade.formatNumber('#.#')} [font-size:13px]({value.percent.formatNumber('#,###.##')}%)[/]";
 
+      chart.legend.maxHeight = 60;
+      chart.legend.scrollable = true;
+
       var markerTemplate = chart.legend.markers.template;
       markerTemplate.width = 13;
       markerTemplate.height = 13;
@@ -170,7 +172,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     store.dispatch(OBTER_TAREFAS);
-    store.dispatch(OBTER_PROJETOS)
+    store.dispatch(OBTER_PROJETOS);
 
     return {
       store,
@@ -197,12 +199,12 @@ export default defineComponent({
 
   .card-grafico {
     padding: 40px 10px;
-    height: 300px;
+    min-height: 300px;
   }
 }
 
 @media only screen and (max-width: 768px) {
-  .card-info{
+  .card-info {
     width: 100px !important;
   }
 }

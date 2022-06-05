@@ -3,7 +3,7 @@
     class="columns is-gapless is-multiline"
     :class="{ 'modo-escuro': modoEscuroAtivo }"
   >
-    <div class="column is-one-quarter">
+    <div class="column is-one-quarter menu">
       <BarraLateral @aoTemaAlterado="trocarTema" />
     </div>
     <div class="column is-three-quarter conteudo">
@@ -53,7 +53,11 @@ main.modo-escuro {
       color: var(--texto-primario); 
   }
 }
+
+
 .conteudo {
+  min-height: 600px;
   background-color: var(--bg-primario);
 }
+
 </style>
