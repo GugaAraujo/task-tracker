@@ -11,26 +11,26 @@
     >
       <div class="column is-2 card card-info">
         <p>
-          <i class="fas fa-tasks"></i>
+          <i class="fas fa-tasks is-hidden-touch"></i>
           Tarefas
         </p>
         {{ tarefas?.length }}
       </div>
       <div class="column is-2 card card-info">
         <p>
-          <i class="far fa-folder-open"></i>
+          <i class="far fa-folder-open is-hidden-touch"></i>
           Projetos
         </p>
         {{ projetos?.length }}
       </div>
-      <div class="column is-2 card card-info">
+      <div class="column is-3 card card-info">
         <p>
-          <i class="far fa-clock"></i>
+          <i class="far fa-clock is-hidden-touch"></i>
           Total
         </p>
         {{ formataHora(horasTotaisTarefas) }}
       </div>
-      <div class="column is-3 card card-info">
+      <div class="column is-3 card card-info is-hidden-touch">
         <p>
           <i class="fa-solid fa-arrow-trend-up"></i>
           {{ taskMaisDemorada?.descricao }}
@@ -86,7 +86,6 @@ export default defineComponent({
     },
     obtemProjetos() {
 
- 
       let projetos = [];
       return fetch(`https://fakeapi-service.herokuapp.com/projetos`)
         .then((data) => data.json())
@@ -191,6 +190,7 @@ export default defineComponent({
   .card {
     border-radius: 15px;
   }
+
   .subtitle {
     margin-bottom: 25px;
   }
@@ -198,6 +198,12 @@ export default defineComponent({
   .card-grafico {
     padding: 40px 10px;
     height: 300px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .card-info{
+    width: 100px !important;
   }
 }
 </style>

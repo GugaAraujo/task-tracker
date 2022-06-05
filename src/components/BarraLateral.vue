@@ -126,7 +126,13 @@ header {
     nav {
       margin-top: 25px;
 
+      ul {
+        white-space: nowrap;
+      }
+
       ul li {
+        flex-wrap: nowrap;
+        font-size: 18px;
         display: inline;
         margin: 1em;
       }

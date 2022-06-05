@@ -68,5 +68,12 @@ i {
     color: hsl(348, 100%, 61%);
   }
 }
+
+@media only screen and (max-width: 768px) {
+  i {
+    position: relative;
+    right: 10px;
+  }
+}
 </style>
 
