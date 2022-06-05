@@ -44,9 +44,25 @@
         </p>
       </div>
     </div>
-    <div class="card card-grafico">
-      <h2 class="subtitle has-text-centered has-text-weight-bold">Projetos por tipo</h2>
-      <div ref="chartdiv"></div>
+    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-desktop">
+      <Pizza
+        :dados="contagemDeProjetos"
+        titulo="Projeto por tipo"
+        propriedade="nomeProjeto"
+        valor="quantidade"
+        :isMobile=true
+        divName="projeto-por-tipo"
+      />
+    </div>
+    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
+      <Pizza
+      :dados="contagemDeProjetos"
+        titulo="Projeto por tipo"
+        propriedade="nomeProjeto"
+        valor="quantidade"
+        divName="projeto-por-tipo"
+      />
+      
     </div>
   </div>
 </template>
@@ -54,14 +70,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useStore } from "../store";
-
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import Pizza from "@/components/graficos/Pizza.vue";
 import { OBTER_PROJETOS, OBTER_TAREFAS } from "@/store/tipo-acoes";
-
-am4core.useTheme(am4themes_animated);
-am4core.addLicense("ch-custom-attribuition");
 
 export default defineComponent({
   name: "Graficos",
@@ -71,7 +81,11 @@ export default defineComponent({
       projetos: null,
       horasTotaisTarefas: 0,
       taskMaisDemorada: null,
+      contagemDeProjetos: null,
     };
+  },
+  components: {
+    Pizza,
   },
   computed: {
     horasTotaisTarefasFormatada(): string {
@@ -109,40 +123,11 @@ export default defineComponent({
               if (tarefa.projeto.nome == projeto.nomeProjeto) {
                 projeto.quantidade++;
               }
-
               return projeto;
             });
           });
         });
       });
-    },
-    iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs.chartdiv, am4charts.PieChart);
-      chart.data = data;
-
-      // Add and configure Series
-      let pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "quantidade";
-      pieSeries.dataFields.category = "nomeProjeto";
-
-      chart.legend = new am4charts.Legend();
-      chart.legend.labels.template.text = "{nomeProjeto}:";
-      chart.legend.valueLabels.template.text =
-        "{quantidade.formatNumber('#.#')} [font-size:13px]({value.percent.formatNumber('#,###.##')}%)[/]";
-
-      chart.legend.maxHeight = 60;
-      chart.legend.scrollable = true;
-
-      var markerTemplate = chart.legend.markers.template;
-      markerTemplate.width = 13;
-      markerTemplate.height = 13;
-      chart.legend.fontSize = 14;
-      chart.legend.dy = 5;
-
-      //descarregando os gráficos não utilizados da memória
-      am4core.options.autoDispose = true;
-
-      this.chart = chart;
     },
     somaDeHoras() {
       let maiorTempo = 0;
@@ -159,15 +144,9 @@ export default defineComponent({
   },
   mounted() {
     this.contabilizaProjetos().then((projetos) => {
-      projetos = projetos.reverse()[0];
-      this.iniciaGrafico(projetos);
+      this.contagemDeProjetos = projetos.reverse()[0];
       this.somaDeHoras();
     });
-  },
-  beforeUnmount() {
-    if (this.chart) {
-      this.chart.dispose();
-    }
   },
   setup() {
     const store = useStore();
@@ -191,6 +170,7 @@ export default defineComponent({
 
   .card {
     border-radius: 15px;
+    margin: 20px auto;
   }
 
   .subtitle {
@@ -199,7 +179,7 @@ export default defineComponent({
 
   .card-grafico {
     padding: 40px 10px;
-    min-height: 300px;
+    min-height: 280px;
   }
 }
 
