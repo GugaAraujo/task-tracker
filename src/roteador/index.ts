@@ -3,6 +3,7 @@ import Tarefas from '../views/Tarefas.vue'
 import Projetos from '../views/Projetos.vue'
 import Formulario from "@/views/projetos/Formulario.vue";
 import Lista from "@/views/projetos/Lista.vue"
+import Graficos from "@/views/Graficos.vue";
 
 const rotas: RouteRecordRaw[] = [
     {
@@ -31,6 +32,11 @@ const rotas: RouteRecordRaw[] = [
                 props: true,
             },
         ],
+    },
+    {
+        path: "/graficos",
+        name: "Graficos",
+        component: Graficos,
     },
 ];
 
