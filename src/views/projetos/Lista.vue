@@ -6,7 +6,7 @@
             </span>
             <span>Novo projeto</span>
         </router-link>
-        <table class="table is-fullwidth">
+        <table class="table is-fullwidth mt-4">
             <thead>
                 <tr>
                     <th>
@@ -68,3 +68,9 @@ export default defineComponent({
     }
 })
 </script>
+
+<style lang="scss" scoped>
+table{
+    border-radius: 5px;
+}
+</style>
