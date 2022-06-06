@@ -16,6 +16,9 @@ import {
 import { Module } from "vuex";
 
 export interface EstadoTarefa {
+    state: {
+        tarefas: [];
+    };
     tarefas: ITarefa[];
 }
 
@@ -39,10 +42,10 @@ export const tarefa: Module<EstadoTarefa, Estado> = {
     },
     actions: {
         [OBTER_TAREFAS]({ commit }, filtro: string) {
-           if (filtro) {
-               filtro = `descricao_like=${filtro}&`;
-           }
-           const url = `tarefas?${filtro}_sort=id&_order=desc`;
+            if (filtro) {
+                filtro = `descricao_like=${filtro}&`;
+            }
+            const url = `tarefas?${filtro}`;
             http.get(url).then((response) =>
                 commit(DEFINIR_TAREFAS, response.data)
             );

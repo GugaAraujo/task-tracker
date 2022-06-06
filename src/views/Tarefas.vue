@@ -173,7 +173,7 @@ export default defineComponent({
     });
 
     return {
-      tarefas: computed(() => store.state.tarefas),
+      tarefas: computed(() => store.state.tarefa.tarefas),
       store,
       filtro,
     };
