@@ -2,7 +2,7 @@
   <div class="is-flex is-align-items-center is-justify-content-space-between">
     <Cronometro :tempoEmSegundos="tempoEmSegundos" />
     
-    <Botao @clicado="iniciar" icone="fas fa-play" texto="play" :disabled="cronometroRodando" />
+    <Botao @clicado="iniciar" icone="fas fa-play" texto="play" :disabled="!botoesHabilitados || cronometroRodando" />
     <Botao @clicado="finalizar" icone="fas fa-stop" texto="stop" :disabled="!cronometroRodando" />
 
   </div>
@@ -16,6 +16,13 @@ import Botao from './Botao.vue'
 export default defineComponent({
 
     name: 'Temporizador',
+    props: {
+       botoesHabilitados:{
+            type: Boolean,
+            required: true,
+            default: false
+        }
+    },
     emits:['aoTemporizadorFinalizado'],
     components: {
         Cronometro,

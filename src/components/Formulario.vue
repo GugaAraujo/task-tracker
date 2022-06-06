@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="column">
-        <Temporizador @aoTemporizadorFinalizado="finalizarTarefa" />
+        <Temporizador @aoTemporizadorFinalizado="finalizarTarefa" :botoesHabilitados="confereValores()" />
       </div>
     </div>
   </div>
@@ -53,6 +53,13 @@ export default defineComponent({
     const projetos = computed(() => store.state.projeto.projetos);
     const descricao = ref("");
     const idProjeto = ref("");
+    let botoesHabilitados = ref(false);
+    
+    const confereValores = () : boolean => {
+      if(descricao.value && idProjeto.value){
+        return botoesHabilitados.value = true
+      }
+    }
 
     const finalizarTarefa = (tempoDecorrido: number): void => {
       const projeto = projetos.value.find((p) => p.id == idProjeto.value);
@@ -80,6 +87,7 @@ export default defineComponent({
       descricao,
       idProjeto,
       finalizarTarefa,
+      confereValores
     };
   },
 });
