@@ -9,7 +9,7 @@
         <input
           type="text"
           class="input"
-          placeholder="Qual tarefa você deseja iniciar?"
+          placeholder="Digite um nome para a sua tarefa"
           v-model="descricao"
         />
       </div>

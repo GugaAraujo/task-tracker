@@ -44,20 +44,27 @@ export default defineComponent({
 }
 main {
   --bg-primario: #fff;
+  --bg-secundario: #fff;
   --texto-primario: #000;
 }
 main.modo-escuro {
-  --bg-primario: #0c0e1c;
+  --bg-primario: #2b3f6f;
+  --bg-secundario: #1e2c5f;
   --texto-primario: rgb(244, 243, 243);
   .title {
-      color: var(--texto-primario); 
+    color: var(--texto-primario);
   }
 }
 
-
 .conteudo {
-  min-height: 600px;
-  background-color: var(--bg-primario);
-}
 
+  min-height: 600px;
+  max-height: 100vh;
+  background-image: linear-gradient(
+    10deg,
+    var(--bg-primario), 65%,
+    var(--bg-secundario)
+  );
+ overflow-y: scroll;
+}
 </style>

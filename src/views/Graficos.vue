@@ -1,6 +1,5 @@
 <template>
   <div class="graficos">
-    <h1 class="title">Relatórios</h1>
     <div
       class="
         columns
@@ -10,38 +9,112 @@
       "
     >
       <div class="column is-2 card card-info">
-        <p>
-          <i class="fas fa-tasks is-hidden-touch"></i>
-          Tarefas
-        </p>
-        {{ tarefas?.length }}
+        <div class="rows">
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-title">
+                <p>
+                  <i class="fas fa-tasks is-hidden-touch"></i>
+                  Tarefas
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-body">
+                <span class="unidades">
+                  {{ tarefas?.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div class="column is-2 card card-info">
-        <p>
-          <i class="far fa-folder-open is-hidden-touch"></i>
-          Projetos
-        </p>
-        {{ projetos?.length }}
+        <div class="rows">
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-title">
+                <p>
+                  <i class="far fa-folder-open is-hidden-touch"></i>
+                  Projetos
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-body">
+                <span class="unidades">
+                  {{ projetos?.length }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div class="column is-3 card card-info">
-        <p>
-          <i class="far fa-clock is-hidden-touch"></i>
-          Total
-        </p>
-        {{ formataHora(horasTotaisTarefas) }}
+        <div class="rows">
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-title">
+                <p>
+                  <i class="far fa-clock is-hidden-touch"></i>
+                  Total
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-body">
+                <span class="soma-horas">
+                  {{ formataHora(horasTotaisTarefas) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div class="column is-3 card card-info is-hidden-touch">
-        <p>
-          <i class="fa-solid fa-arrow-trend-up"></i>
-          {{ taskMaisDemorada?.descricao }}
-        </p>
-        <p>
-          {{
-            taskMaisDemorada?.duracaoEmSegundos
-              ? formataHora(taskMaisDemorada.duracaoEmSegundos)
-              : ""
-          }}
-        </p>
+        <div class="rows">
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-title">
+                <p>
+                  <i class="fa-solid fa-arrow-trend-up"></i>
+                  Mais demorada
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns">
+              <div class="column is-12 card-info-body">
+                <div class="row">
+                  <div class="row">
+                    <span class="maior-demanda">
+                      {{ taskMaisDemorada?.descricao }}
+                    </span>
+                  </div>
+                  <div class="row">
+                    <p>
+                      {{
+                        taskMaisDemorada?.duracaoEmSegundos
+                          ? formataHora(taskMaisDemorada.duracaoEmSegundos)
+                          : ""
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-desktop">
@@ -50,19 +123,18 @@
         titulo="Projeto por tipo"
         propriedade="nomeProjeto"
         valor="quantidade"
-        :isMobile=true
+        :isMobile="true"
         divName="projeto-por-tipo"
       />
     </div>
     <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
       <Pizza
-      :dados="contagemDeProjetos"
+        :dados="contagemDeProjetos"
         titulo="Projeto por tipo"
         propriedade="nomeProjeto"
         valor="quantidade"
         divName="projeto-por-tipo"
       />
-      
     </div>
   </div>
 </template>
@@ -164,13 +236,53 @@ export default defineComponent({
 .graficos {
   padding: 1.25rem;
 
-  i {
-    color: rgb(193, 189, 189);
-  }
-
   .card {
+
     border-radius: 15px;
     margin: 20px auto;
+    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 25%),
+      0 0 0 1px rgb(10 10 10 / 2%);
+  }
+
+  .card-info {
+    height: 100px;
+
+    .card-info-title {
+      padding: 8px;
+      font-size: 15px;
+      width: 100%;
+      background-image: linear-gradient(95deg, #285d90, #4072a1);
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      color: #fff;
+
+      i {
+        color: rgb(238, 238, 238);
+        position: absolute;
+        left: 15px;
+        top: 13px;
+        font-size: 16px;
+      }
+    }
+
+    .card-info-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80px;
+
+      .unidades {
+        font-size: 25px;
+      }
+
+      .soma-horas {
+        font-size: 25px;
+      }
+
+      .maior-demanda {
+        font-size: 15px;
+      }
+    }
   }
 
   .subtitle {
@@ -186,6 +298,12 @@ export default defineComponent({
 @media only screen and (max-width: 768px) {
   .card-info {
     width: 100px !important;
+  }
+
+  .card-info-body {
+    .soma-horas {
+      font-size: 19px !important;
+    }
   }
 }
 </style>

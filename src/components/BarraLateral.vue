@@ -26,7 +26,7 @@
         <li>
           <router-link to="/graficos" class="link">
             <i class="fas fa-chart-pie"></i>
-            gráficos
+            relatórios
           </router-link>
         </li>
       </ul>
@@ -66,7 +66,10 @@ export default defineComponent({
 @import "@vueform/toggle/themes/default.css";
 header {
   padding: 1rem;
-  background: #0d3b66;
+  background-image: linear-gradient(95deg, #0d3b66, #285d90);
+    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 45%),
+    0 0 0 1px rgb(10 10 10 / 2%);
+  border: 1px solid rgb(44, 78, 137);
   text-shadow: 1px 1px 1px #000;
   width: 100%;
   height: 100vh;
@@ -100,6 +103,11 @@ header {
       text-align: left;
       font-size: 18px;
       margin: 18px 0;
+      transition: all .2s ease-in-out;
+
+      &:hover {
+          transform: scale(1.15); 
+      }
 
       i{
         margin-right: 5px;

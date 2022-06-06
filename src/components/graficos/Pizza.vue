@@ -117,7 +117,9 @@ export default defineComponent({
     this.iniciaGrafico(this.dados);
   },
   beforeUnmount() {
-  this.charts.forEach((chart) => chart.dispose());
+    if (this.charts) {
+      this.charts.dispose();
+    }
   },
 });
 </script>
