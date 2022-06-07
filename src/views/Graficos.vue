@@ -136,6 +136,16 @@
         divName="projeto-por-tipo"
       />
     </div>
+    <div v-if="contagemDeProjetos" class="card card-grafico">
+      <BulletChart
+        :dados="tarefas"
+        titulo="Tarefas por duração"
+        propriedade="descricao"
+        valor="duracaoEmSegundos"
+        divName="projeto-por-tipo"
+        :isTime="true"
+      />
+    </div>
   </div>
 </template>
 
@@ -143,6 +153,7 @@
 import { defineComponent } from "vue";
 import { useStore } from "../store";
 import Pizza from "@/components/graficos/Pizza.vue";
+import BulletChart from "@/components/graficos/BulletChart.vue";
 import { OBTER_PROJETOS, OBTER_TAREFAS } from "@/store/tipo-acoes";
 
 export default defineComponent({
@@ -158,6 +169,7 @@ export default defineComponent({
   },
   components: {
     Pizza,
+    BulletChart
   },
   computed: {
     horasTotaisTarefasFormatada(): string {

@@ -16,7 +16,7 @@ am4core.useTheme(am4themes_animated);
 am4core.addLicense("ch-custom-attribuition");
 
 export default defineComponent({
-  name: "Pizza",
+  name: "BulletChart",
   props: {
     titulo: {
       type: String,
@@ -47,24 +47,61 @@ export default defineComponent({
   },
   methods: {
     iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs[this.divName], am4charts.PieChart);
+      let chart = am4core.create(this.$refs[this.divName], am4charts.XYChart);
       chart.data = data;
 
       // Add and configure Series
-      let pieSeries = chart.series.push(new am4charts.PieSeries());
+      var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+      categoryAxis.renderer.grid.template.location = 0;
+      categoryAxis.dataFields.category = this.propriedade;
+      categoryAxis.renderer.minGridDistance = 1;
+      categoryAxis.renderer.inversed = true;
+      categoryAxis.renderer.grid.template.disabled = true;
 
+      var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+      valueAxis.min = 0;
+    
       //Indicando a propriedade e o valor exibido no gráfico
-      pieSeries.dataFields.category = this.propriedade;
-      pieSeries.dataFields.value = this.valor;
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryY = this.propriedade;
+        series.dataFields.valueX = this.valor;
+        series.tooltipText = "{valueX.value}"
+        series.columns.template.strokeOpacity = 0;
+        series.columns.template.column.cornerRadiusBottomRight = 5;
+        series.columns.template.column.cornerRadiusTopRight = 5;
 
-      if (this.isMobile) {
-        this.chartMobile(chart);
-        this.seriesMobile(pieSeries);
-      } else {
-        this.chartDesktop(chart);
-      }
+        var labelBullet = series.bullets.push(new am4charts.LabelBullet())
+        labelBullet.label.horizontalCenter = "left";
+        labelBullet.label.dx = 10;
+        labelBullet.label.text = "{values.valueX.workingValue}";
+        labelBullet.locationX = 1;
 
-      this.loadAnimation(pieSeries);
+  // Cores diferentes para cada barra
+  series.columns.template.adapter.add("fill", function(fill, target){
+    return chart.colors.getIndex(target.dataItem.index);
+  });
+
+  labelBullet.label.truncate = false;
+
+  //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
+  series.calculatePercent = true;
+  chart.numberFormatter.numberFormat = "#.##";
+
+
+  //verifica se é Tempo ou Unidade
+  this.isTime 
+  ? labelBullet.label.text = "{valueX.formatDuration('hh:mm:ss')} [font-size:13px]({valueX.percent}%)[/]"
+  : labelBullet.label.text = "{valueX} [font-size:12px]({valueX.percent}%)[/]";
+
+
+      // if (this.isMobile) {
+      //   this.chartMobile(chart);
+      //   this.seriesMobile(pieSeries);
+      // } else {
+      //   this.chartDesktop(chart);
+      // }
+
+      // this.loadAnimation(pieSeries);
 
       //descarregando os gráficos não utilizados da memória
       am4core.options.autoDispose = true;
