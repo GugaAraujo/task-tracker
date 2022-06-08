@@ -2,7 +2,7 @@
   <h2 class="subtitle has-text-centered has-text-weight-bold">
     {{ titulo }}
   </h2>
-  <div :ref="divName"></div>
+  <div id="pieChart" ref="pieChart"></div>
 </template>
 
 <script lang="ts">
@@ -11,6 +11,7 @@ import { defineComponent } from "vue";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import colorsChart from "@/utils/colorsChart";
 
 am4core.useTheme(am4themes_animated);
 am4core.addLicense("ch-custom-attribuition");
@@ -34,10 +35,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    divName: {
-      type: String,
-      required: true,
-    },
     isMobile: {
       type: Boolean,
     },
@@ -47,11 +44,14 @@ export default defineComponent({
   },
   methods: {
     iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs[this.divName], am4charts.PieChart);
+      let chart = am4core.create(this.$refs["pieChart"], am4charts.PieChart);
       chart.data = data;
 
       // Add and configure Series
       let pieSeries = chart.series.push(new am4charts.PieSeries());
+
+      // Estabelecendo Paleta de Cores
+      pieSeries.colors.list = colorsChart;
 
       //Indicando a propriedade e o valor exibido no gráfico
       pieSeries.dataFields.category = this.propriedade;
@@ -95,6 +95,8 @@ export default defineComponent({
       return chart;
     },
     chartMobile(chart): am4charts.PieChart {
+      chart.responsive.enabled = true;
+
       chart.legend = new am4charts.Legend();
       chart.legend.labels.template.text = `{${this.propriedade}}:`;
       chart.legend.valueLabels.template.text = `{${this.valor}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
@@ -126,3 +128,11 @@ export default defineComponent({
   },
 });
 </script>
+
+
+<style lang="scss">
+#pieChart {
+  width: 100%;
+  height: 200px;
+}
+</style>

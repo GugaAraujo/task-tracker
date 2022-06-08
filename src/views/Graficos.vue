@@ -124,7 +124,6 @@
         propriedade="nomeProjeto"
         valor="quantidade"
         :isMobile="true"
-        divName="projeto-por-tipo"
       />
     </div>
     <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
@@ -133,10 +132,9 @@
         titulo="Projeto por tipo"
         propriedade="nomeProjeto"
         valor="quantidade"
-        divName="projeto-por-tipo"
       />
     </div>
-    <div v-if="contagemDeProjetos" class="card card-grafico">
+    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
       <BulletChart
         :dados="tarefas"
         titulo="Tarefas por duração"
@@ -144,6 +142,17 @@
         valor="duracaoEmSegundos"
         divName="projeto-por-tipo"
         :isTime="true"
+      />
+    </div>
+    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-desktop">
+      <BulletChart
+        :dados="tarefas"
+        titulo="Tarefas por duração"
+        propriedade="descricao"
+        valor="duracaoEmSegundos"
+        divName="projeto-por-tipo"
+        :isTime="true"
+        :isMobile="true"
       />
     </div>
   </div>
@@ -254,6 +263,17 @@ export default defineComponent({
     margin: 20px auto;
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 25%),
       0 0 0 1px rgb(10 10 10 / 2%);
+  }
+
+
+  .teste {
+       padding: 8px;
+      font-size: 15px;
+      width: 100%;
+      background-image: linear-gradient(95deg, #285d90, #4072a1);
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      color: #fff;
   }
 
   .card-info {

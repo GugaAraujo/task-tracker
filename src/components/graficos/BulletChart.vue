@@ -2,7 +2,7 @@
   <h2 class="subtitle has-text-centered has-text-weight-bold">
     {{ titulo }}
   </h2>
-  <div :ref="divName"></div>
+  <div id="bulletChart" ref="bulletChart"></div>
 </template>
 
 <script lang="ts">
@@ -11,6 +11,7 @@ import { defineComponent } from "vue";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import colorsChart from "@/utils/colorsChart";
 
 am4core.useTheme(am4themes_animated);
 am4core.addLicense("ch-custom-attribuition");
@@ -34,10 +35,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    divName: {
-      type: String,
-      required: true,
-    },
     isMobile: {
       type: Boolean,
     },
@@ -47,7 +44,8 @@ export default defineComponent({
   },
   methods: {
     iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs[this.divName], am4charts.XYChart);
+      let chart = am4core.create(this.$refs["bulletChart"], am4charts.XYChart);
+
       chart.data = data;
 
       // Add and configure Series
@@ -60,97 +58,90 @@ export default defineComponent({
 
       var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
       valueAxis.min = 0;
-    
+
       //Indicando a propriedade e o valor exibido no gráfico
-        var series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryY = this.propriedade;
-        series.dataFields.valueX = this.valor;
-        series.tooltipText = "{valueX.value}"
-        series.columns.template.strokeOpacity = 0;
-        series.columns.template.column.cornerRadiusBottomRight = 5;
-        series.columns.template.column.cornerRadiusTopRight = 5;
+      var series = chart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.categoryY = this.propriedade;
+      series.dataFields.valueX = this.valor;
+      series.tooltipText = "{valueX.value}";
+      series.columns.template.strokeOpacity = 0;
+      series.columns.template.column.cornerRadiusBottomRight = 5;
+      series.columns.template.column.cornerRadiusTopRight = 5;
 
-        var labelBullet = series.bullets.push(new am4charts.LabelBullet())
-        labelBullet.label.horizontalCenter = "left";
-        labelBullet.label.dx = 10;
-        labelBullet.label.text = "{values.valueX.workingValue}";
-        labelBullet.locationX = 1;
+      // Cores diferentes para cada barra
 
-  // Cores diferentes para cada barra
-  series.columns.template.adapter.add("fill", function(fill, target){
-    return chart.colors.getIndex(target.dataItem.index);
-  });
+      // Estabelecendo Paleta de Cores
+      chart.colors.list = colorsChart;
 
-  labelBullet.label.truncate = false;
+      series.columns.template.adapter.add("fill", function (fill, target) {
+        return chart.colors.getIndex(target.dataItem.index);
+      });
 
-  //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
-  series.calculatePercent = true;
-  chart.numberFormatter.numberFormat = "#.##";
+      var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+      labelBullet.label.horizontalCenter = "left";
+      labelBullet.label.dx = 10;
+      labelBullet.label.text = "{values.valueX.workingValue}";
+      labelBullet.locationX = 1;
+      labelBullet.label.truncate = false;
 
+      if (this.isMobile) {
+        chart.responsive.enabled = true;
+        this.labelMobile(labelBullet);
+      } else {
+        this.labelDesktop(labelBullet);
+      }
 
-  //verifica se é Tempo ou Unidade
-  this.isTime 
-  ? labelBullet.label.text = "{valueX.formatDuration('hh:mm:ss')} [font-size:13px]({valueX.percent}%)[/]"
-  : labelBullet.label.text = "{valueX} [font-size:12px]({valueX.percent}%)[/]";
+      // Ajustando a Div de acordo com a quantidade de dados
+      this.settingSizeDiv(chart)
 
-
-      // if (this.isMobile) {
-      //   this.chartMobile(chart);
-      //   this.seriesMobile(pieSeries);
-      // } else {
-      //   this.chartDesktop(chart);
-      // }
-
-      // this.loadAnimation(pieSeries);
+      //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
+      series.calculatePercent = true;
+      chart.numberFormatter.numberFormat = "#.##";
 
       //descarregando os gráficos não utilizados da memória
       am4core.options.autoDispose = true;
 
       this.chart = chart;
     },
-    loadAnimation(series): am4charts.PieSeries {
-      series.hiddenState.properties.opacity = 1;
-      series.hiddenState.properties.endAngle = -90;
-      series.hiddenState.properties.startAngle = -90;
+    settingSizeDiv(chart) {
+      // Set cell size in pixels
+      var cellSize = 30;
+      chart.events.on("datavalidated", function (ev) {
+        // Get objects of interest
+        var chart = ev.target;
+        var categoryAxis = chart.yAxes.getIndex(0);
 
-      return series;
-    },
-    chartDesktop(chart): am4charts.PieChart {
-      chart.legend = new am4charts.Legend();
-      chart.legend.labels.template.text = `{${this.propriedade}}:`;
-      chart.legend.valueLabels.template.text = `{${this.valor}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
+        // Calculate how we need to adjust chart height
+        var adjustHeight =
+          chart.data.length * cellSize - categoryAxis.pixelHeight;
 
-      chart.legend.maxHeight = 60;
-      chart.legend.scrollable = true;
+        // get current chart height
+        var targetHeight = chart.pixelHeight + adjustHeight;
 
-      var markerTemplate = chart.legend.markers.template;
-      markerTemplate.width = 15;
-      markerTemplate.height = 15;
-      chart.legend.fontSize = 15;
-      chart.legend.dy = 5;
+        // Set it on chart's container
+        chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+      });
 
       return chart;
     },
-    chartMobile(chart): am4charts.PieChart {
-      chart.legend = new am4charts.Legend();
-      chart.legend.labels.template.text = `{${this.propriedade}}:`;
-      chart.legend.valueLabels.template.text = `{${this.valor}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
+    labelDesktop(labelBullet): am4charts.LabelBullet {
+      //verifica se é Tempo ou Unidade
+      this.isTime
+        ? (labelBullet.label.text =
+            "{valueX.formatDuration('hh:mm:ss')} ({valueX.percent}%)")
+        : (labelBullet.label.text =
+            "{valueX} [font-size:12px]({valueX.percent}%)[/]");
 
-      chart.legend.position = "right";
-      chart.legend.maxWidth = 280;
-      chart.legend.maxHeight = 300;
-      chart.legend.scrollable = true;
-
-      var markerTemplate = chart.legend.markers.template;
-      markerTemplate.width = 15;
-      markerTemplate.height = 15;
-
-      return chart;
+      return labelBullet;
     },
-    seriesMobile(series): am4charts.PieSeries {
-      series.ticks.template.disabled = true;
-      series.labels.template.disabled = true;
-      return series;
+    labelMobile(labelBullet): am4charts.LabelBullet {
+      //verifica se é Tempo ou Unidade
+      this.isTime
+        ? (labelBullet.label.text = "[font-size:14px]{valueX.percent}%[/]")
+        : (labelBullet.label.text =
+            "{valueX} [font-size:12px]({valueX.percent}%)[/]");
+
+      return labelBullet;
     },
   },
   mounted() {
