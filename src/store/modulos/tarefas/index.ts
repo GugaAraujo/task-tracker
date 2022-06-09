@@ -51,6 +51,8 @@ export const tarefa: Module<EstadoTarefa, Estado> = {
             );
         },
         [CADASTRAR_TAREFAS]({ commit }, tarefa: ITarefa) {
+            tarefa.date = new Date().toLocaleDateString();
+            console.log(tarefa.date);
             return http
                 .post("/tarefas", tarefa)
                 .then((response) => commit(ADICIONA_TAREFA, response.data));
