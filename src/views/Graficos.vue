@@ -117,43 +117,103 @@
         </div>
       </div>
     </div>
-    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-desktop">
-      <Pizza
-        :dados="contagemDeProjetos"
-        titulo="Projeto por tipo"
-        propriedade="nomeProjeto"
-        valor="quantidade"
-        :isMobile="true"
-      />
+
+    <div class="column card card-grafico is-hidden-desktop">
+      <div class="rows">
+        <div class="row">
+          <div class="columns">
+            <div class="column card-chart-title">
+              <p>Projeto por Tipo</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <div v-if="contagemDeProjetos" class="column">
+              <Pizza
+                :dados="contagemDeProjetos"
+                propriedade="nomeProjeto"
+                valor="quantidade"
+                :isMobile="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
-      <Pizza
-        :dados="contagemDeProjetos"
-        titulo="Projeto por tipo"
-        propriedade="nomeProjeto"
-        valor="quantidade"
-      />
+
+    <div class="column card card-grafico is-hidden-desktop">
+      <div class="rows">
+        <div class="row">
+          <div class="columns">
+            <div class="column card-chart-title">
+              <p>Tarefas por Tempo</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <div v-if="contagemDeProjetos" class="column">
+              <BulletChart
+                :dados="tarefas"
+                propriedade="descricao"
+                valor="duracaoEmSegundos"
+                divName="projeto-por-tipo"
+                :isTime="true"
+                :isMobile="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-touch">
-      <BulletChart
-        :dados="tarefas"
-        titulo="Tarefas por duração"
-        propriedade="descricao"
-        valor="duracaoEmSegundos"
-        divName="projeto-por-tipo"
-        :isTime="true"
-      />
+
+    <div class="column card card-grafico is-hidden-touch">
+      <div class="rows">
+        <div class="row">
+          <div class="columns">
+            <div class="column card-chart-title">
+              <p>Projeto por Tipo</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <div v-if="contagemDeProjetos" class="column">
+              <Pizza
+                :dados="contagemDeProjetos"
+                propriedade="nomeProjeto"
+                valor="quantidade"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div v-if="contagemDeProjetos" class="card card-grafico is-hidden-desktop">
-      <BulletChart
-        :dados="tarefas"
-        titulo="Tarefas por duração"
-        propriedade="descricao"
-        valor="duracaoEmSegundos"
-        divName="projeto-por-tipo"
-        :isTime="true"
-        :isMobile="true"
-      />
+
+    <div class="column card card-grafico is-hidden-touch">
+      <div class="rows">
+        <div class="row">
+          <div class="columns">
+            <div class="column card-chart-title">
+              <p>Tarefas por Tempo</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns">
+            <div v-if="contagemDeProjetos" class="column">
+              <BulletChart
+                :dados="tarefas"
+                propriedade="descricao"
+                valor="duracaoEmSegundos"
+                divName="projeto-por-tipo"
+                :isTime="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -178,7 +238,7 @@ export default defineComponent({
   },
   components: {
     Pizza,
-    BulletChart
+    BulletChart,
   },
   computed: {
     horasTotaisTarefasFormatada(): string {
@@ -258,22 +318,10 @@ export default defineComponent({
   padding: 1.25rem;
 
   .card {
-
     border-radius: 15px;
     margin: 20px auto;
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 25%),
       0 0 0 1px rgb(10 10 10 / 2%);
-  }
-
-
-  .teste {
-       padding: 8px;
-      font-size: 15px;
-      width: 100%;
-      background-image: linear-gradient(95deg, #285d90, #4072a1);
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      color: #fff;
   }
 
   .card-info {
@@ -322,8 +370,33 @@ export default defineComponent({
   }
 
   .card-grafico {
-    padding: 40px 10px;
-    min-height: 280px;
+    min-height: 200px;
+
+    .card-chart-title {
+      text-align: center;
+      font-weight: 600;
+      padding: 8px;
+      font-size: 15px;
+      width: 100%;
+      background-image: linear-gradient(95deg, #285d90, #4072a1);
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      color: #fff;
+
+      i {
+        color: rgb(238, 238, 238);
+        position: absolute;
+        left: 15px;
+        top: 13px;
+        font-size: 16px;
+      }
+    }
+
+    .card-chart-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 

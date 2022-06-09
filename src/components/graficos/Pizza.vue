@@ -1,7 +1,4 @@
 <template>
-  <h2 class="subtitle has-text-centered has-text-weight-bold">
-    {{ titulo }}
-  </h2>
   <div id="pieChart" ref="pieChart"></div>
 </template>
 
@@ -19,10 +16,6 @@ am4core.addLicense("ch-custom-attribuition");
 export default defineComponent({
   name: "Pizza",
   props: {
-    titulo: {
-      type: String,
-      required: true,
-    },
     dados: {
       type: Object,
       required: true,

@@ -1,7 +1,4 @@
 <template>
-  <h2 class="subtitle has-text-centered has-text-weight-bold">
-    {{ titulo }}
-  </h2>
   <div id="bulletChart" ref="bulletChart"></div>
 </template>
 
@@ -19,10 +16,6 @@ am4core.addLicense("ch-custom-attribuition");
 export default defineComponent({
   name: "BulletChart",
   props: {
-    titulo: {
-      type: String,
-      required: true,
-    },
     dados: {
       type: Object,
       required: true,
@@ -55,10 +48,13 @@ export default defineComponent({
       categoryAxis.renderer.minGridDistance = 1;
       categoryAxis.renderer.inversed = true;
       categoryAxis.renderer.grid.template.disabled = true;
+      let label = categoryAxis.renderer.labels.template;
+      label.truncate = true;
+      label.maxWidth = 240;
 
       var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
       valueAxis.min = 0;
-
+      valueAxis.renderer.labels.template.disabled = true;
       //Indicando a propriedade e o valor exibido no gráfico
       var series = chart.series.push(new am4charts.ColumnSeries());
       series.dataFields.categoryY = this.propriedade;
@@ -92,15 +88,14 @@ export default defineComponent({
       }
 
       // Ajustando a Div de acordo com a quantidade de dados
-      this.settingSizeDiv(chart)
+      this.settingSizeDiv(chart);
 
       //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
       series.calculatePercent = true;
-      chart.numberFormatter.numberFormat = "#.##";
+      chart.numberFormatter.numberFormat = "#.#";
 
       //descarregando os gráficos não utilizados da memória
       am4core.options.autoDispose = true;
-
       this.chart = chart;
     },
     settingSizeDiv(chart) {
