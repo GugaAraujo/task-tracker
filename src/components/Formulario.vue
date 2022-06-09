@@ -11,11 +11,14 @@
           class="input"
           placeholder="Digite um nome para a sua tarefa"
           v-model="descricao"
+          :disabled="inputHabilitados"
         />
       </div>
       <div class="column is-3">
         <div class="select">
-          <select v-model="idProjeto">
+          <select v-model="idProjeto"       
+            :disabled="inputHabilitados"
+          >
             <option value="">Selecione o projeto</option>
             <option
               :value="projeto.id"
@@ -28,7 +31,11 @@
         </div>
       </div>
       <div class="column">
-        <Temporizador @aoTemporizadorFinalizado="finalizarTarefa" :botoesHabilitados="confereValores()" />
+        <Temporizador 
+          @aoTemporizadorFinalizado="finalizarTarefa" 
+          @rodandoTarefa="alternaBloqueioInputs"
+          :botoesHabilitados="confereValores()" 
+        />
       </div>
     </div>
   </div>
@@ -54,6 +61,11 @@ export default defineComponent({
     const descricao = ref("");
     const idProjeto = ref("");
     let botoesHabilitados = ref(false);
+    let inputHabilitados = ref(false);
+
+    const alternaBloqueioInputs = () : boolean => {
+      return inputHabilitados.value = !inputHabilitados.value
+    }
     
     const confereValores = () : boolean => {
       if(descricao.value && idProjeto.value){
@@ -62,6 +74,7 @@ export default defineComponent({
     }
 
     const finalizarTarefa = (tempoDecorrido: number): void => {
+      alternaBloqueioInputs()
       const projeto = projetos.value.find((p) => p.id == idProjeto.value);
 
       if (!projeto) {
@@ -79,6 +92,7 @@ export default defineComponent({
         projeto: projetos.value.find((proj) => proj.id === idProjeto.value),
       });
       descricao.value = "";
+      idProjeto.value = ""
     };
 
     return {
@@ -86,8 +100,10 @@ export default defineComponent({
       store,
       descricao,
       idProjeto,
+      inputHabilitados,
       finalizarTarefa,
-      confereValores
+      confereValores,
+      alternaBloqueioInputs
     };
   },
 });

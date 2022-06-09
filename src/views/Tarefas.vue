@@ -123,14 +123,12 @@ export default defineComponent({
   },
   methods: {
     abrirModalExcluirTask(tarefa: ITarefa) {
-      console.log("clicou na lixeira");
       this.taskAhSerExcluida = tarefa;
     },
     salvarTarefa(tarefa: ITarefa): void {
       this.store.dispatch(CADASTRAR_TAREFAS, tarefa);
     },
     selecionarTarefa(tarefa: ITarefa) {
-      console.log("clicou em outro lugar");
       this.tarefaSelecionada = tarefa;
     },
     fecharModal() {

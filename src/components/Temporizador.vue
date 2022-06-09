@@ -23,7 +23,7 @@ export default defineComponent({
             default: false
         }
     },
-    emits:['aoTemporizadorFinalizado'],
+    emits:['aoTemporizadorFinalizado','rodandoTarefa'],
     components: {
         Cronometro,
         Botao
@@ -37,7 +37,7 @@ export default defineComponent({
     },
     methods: {
         iniciar () {
-            
+            this.$emit("rodandoTarefa")
             this.cronometroRodando = true
             this.cronometro = setInterval(()=>{
                 this.tempoEmSegundos++
