@@ -65,7 +65,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@vueform/toggle/themes/default.css";
 header {
-  padding: 1rem;
   background-image: linear-gradient(95deg, #0d3b66, #285d90);
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 45%),
     0 0 0 1px rgb(10 10 10 / 2%);
@@ -102,7 +101,7 @@ header {
     li {
       text-align: left;
       font-size: 18px;
-      margin: 18px 0;
+      margin-top: 18px;
       transition: all .2s ease-in-out;
 
       &:hover {

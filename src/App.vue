@@ -46,6 +46,12 @@ main {
   --bg-primario: #fff;
   --bg-secundario: #fff;
   --texto-primario: #000;
+
+  width: 100%;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 2000px;
+
 }
 main.modo-escuro {
   --bg-primario: #2b3f6f;
@@ -56,7 +62,18 @@ main.modo-escuro {
   }
 }
 
+.menu {
+    position: sticky;
+  display: inline-block;
+  vertical-align: top;
+  max-height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+}
+
 .conteudo {
+  display: inline-block;
 
   min-height: 600px;
   max-height: 100vh;
@@ -67,4 +84,37 @@ main.modo-escuro {
   );
  overflow-y: scroll;
 }
+
+
+@media only screen and (max-width: 768px) {
+.menu {
+    position: unset;
+  display: block;
+  max-height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+}
+
+.conteudo {
+  display: block;
+
+  min-height: 600px;
+  max-height: 100vh;
+  background-image: linear-gradient(
+    10deg,
+    var(--bg-primario), 65%,
+    var(--bg-secundario)
+  );
+ overflow-y: scroll;
+}
+
+
+
+
+
+
+}
+
+
 </style>
