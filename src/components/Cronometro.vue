@@ -41,16 +41,19 @@ export default defineComponent ({
 .display{
   color: var(--texto-primario)
 }
+    .time {
+        position: relative;
+        left: 9px;
+    }
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
     i {
         display: none;
     }
     .time {
-        position: relative;
-        right: 9px;
+        left: -10px;
     }
     .running {
-        color: rgb(32, 141, 32);
+        color: rgb(72, 197, 72);
     }
 }
 </style>
