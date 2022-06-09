@@ -23,9 +23,15 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <span class="unidades">
-                  {{ tarefas?.length }}
+                <span v-if="tarefas?.length" class="unidades">
+                  {{ tarefas.length }}
                 </span>
+                <bounce-loader
+                  v-else
+                  :loading="loading"
+                  color="#4072A1"
+                  size="10px"
+                ></bounce-loader>
               </div>
             </div>
           </div>
@@ -47,9 +53,15 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <span class="unidades">
-                  {{ projetos?.length }}
+                <span v-if="projetos?.length" class="unidades">
+                  {{ projetos.length }}
                 </span>
+                <bounce-loader
+                  v-else
+                  :loading="loading"
+                  color="#4072A1"
+                  size="10px"
+                ></bounce-loader>
               </div>
             </div>
           </div>
@@ -95,7 +107,7 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <div class="row">
+                <div v-if="taskMaisDemorada?.descricao" class="row">
                   <div class="row">
                     <span class="maior-demanda">
                       {{ taskMaisDemorada?.descricao }}
@@ -111,6 +123,12 @@
                     </p>
                   </div>
                 </div>
+                <bounce-loader
+                  v-else
+                  :loading="loading"
+                  color="#4072A1"
+                  size="10px"
+                ></bounce-loader>
               </div>
             </div>
           </div>
@@ -128,7 +146,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="columns">
+          <div class="columns card-chart-body">
             <div v-if="contagemDeProjetos" class="column">
               <Pizza
                 :dados="contagemDeProjetos"
@@ -137,6 +155,13 @@
                 :isMobile="true"
               />
             </div>
+            <moon-loader
+              class="spinnerChart"
+              v-else
+              :loading="loading"
+              color="#4072A1"
+              size="40px"
+            ></moon-loader>
           </div>
         </div>
       </div>
@@ -152,7 +177,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="columns">
+          <div class="columns card-chart-body">
             <div v-if="contagemDeProjetos" class="column">
               <BulletChart
                 :dados="tarefas"
@@ -163,6 +188,13 @@
                 :isMobile="true"
               />
             </div>
+            <moon-loader
+              class="spinnerChart"
+              v-else
+              :loading="loading"
+              color="#4072A1"
+              size="40px"
+            ></moon-loader>
           </div>
         </div>
       </div>
@@ -178,7 +210,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="columns">
+          <div class="columns card-chart-body">
             <div v-if="contagemDeProjetos" class="column">
               <Pizza
                 :dados="contagemDeProjetos"
@@ -186,6 +218,13 @@
                 valor="quantidade"
               />
             </div>
+            <moon-loader
+              class="spinnerChart"
+              v-else
+              :loading="loading"
+              color="#4072A1"
+              size="40px"
+            ></moon-loader>
           </div>
         </div>
       </div>
@@ -201,7 +240,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="columns">
+          <div class="columns card-chart-body">
             <div v-if="contagemDeProjetos" class="column">
               <BulletChart
                 :dados="tarefas"
@@ -211,6 +250,13 @@
                 :isTime="true"
               />
             </div>
+            <moon-loader
+              class="spinnerChart"
+              v-else
+              :loading="loading"
+              color="#4072A1"
+              size="40px"
+            ></moon-loader>
           </div>
         </div>
       </div>
@@ -225,6 +271,9 @@ import Pizza from "@/components/graficos/Pizza.vue";
 import BulletChart from "@/components/graficos/BulletChart.vue";
 import { OBTER_PROJETOS, OBTER_TAREFAS } from "@/store/tipo-acoes";
 
+import BounceLoader from "vue-spinner/src/BounceLoader.vue";
+import MoonLoader from "vue-spinner/src/MoonLoader.vue";
+
 export default defineComponent({
   name: "Graficos",
   data() {
@@ -237,6 +286,8 @@ export default defineComponent({
     };
   },
   components: {
+    MoonLoader,
+    BounceLoader,
     Pizza,
     BulletChart,
   },
@@ -396,6 +447,11 @@ export default defineComponent({
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .spinnerChart {
+        padding: 70px;
+        margin: auto;
+      }
     }
   }
 }
