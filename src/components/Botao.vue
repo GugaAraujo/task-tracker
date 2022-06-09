@@ -6,7 +6,7 @@
         <span class="icon">
             <i :class="icone"></i>
         </span>
-        <span>
+        <span class="text-button">
             {{ texto }}
         </span>
     </button>
@@ -38,3 +38,24 @@ export default defineComponent({
   }
 })
 </script>
+
+
+<style lang="scss">
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .button {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center;
+
+        .text-button {
+            display: none;
+        }
+        i {
+            position: relative;
+            left: 7px;;
+        }
+    }
+}
+</style>

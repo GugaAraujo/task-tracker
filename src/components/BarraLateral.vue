@@ -66,7 +66,7 @@ export default defineComponent({
 @import "@vueform/toggle/themes/default.css";
 header {
   background-image: linear-gradient(95deg, #0d3b66, #285d90);
-    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 45%),
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 45%),
     0 0 0 1px rgb(10 10 10 / 2%);
   border: 1px solid rgb(44, 78, 137);
   text-shadow: 1px 1px 1px #000;
@@ -79,8 +79,8 @@ header {
     color: #fff;
     margin-bottom: 5px;
   }
-  
-  .switch-darkmode{
+
+  .switch-darkmode {
     color: #fff;
     font-size: 14px;
     .toggle-blue {
@@ -102,13 +102,13 @@ header {
       text-align: left;
       font-size: 18px;
       margin-top: 18px;
-      transition: all .2s ease-in-out;
+      transition: all 0.2s ease-in-out;
 
       &:hover {
-          transform: scale(1.15); 
+        transform: scale(1.15);
       }
 
-      i{
+      i {
         margin-right: 5px;
       }
 
@@ -141,6 +141,26 @@ header {
         flex-wrap: nowrap;
         font-size: 18px;
         display: inline;
+        margin: 1em;
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+  header {
+    padding: 1rem;
+
+    .brand {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    nav {
+      margin-top: 20px;
+
+      ul li {
+        font-size: 17px;
         margin: 1em;
       }
     }

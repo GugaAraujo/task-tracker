@@ -1,7 +1,9 @@
 <template>
   <section>
       <i class="far fa-clock"></i>
+      <span class="time" :class="isRunning ? 'running' : ''">
       {{ tempoDecorrido }}
+      </span>
   </section>
 </template>
 
@@ -15,6 +17,18 @@ export default defineComponent ({
             default: 0
         }
     },
+    data() {
+        return {
+            isRunning: false
+        }
+    },
+    watch:{
+        tempoEmSegundos(newValue){
+            newValue > 0
+            ? this.isRunning = true
+            : this.isRunning = false
+        }
+    },
     computed: {
         tempoDecorrido (): string {
             return new Date(this.tempoEmSegundos * 1000 ).toISOString().substr(11,8)
@@ -26,5 +40,17 @@ export default defineComponent ({
 <style scoped>
 .display{
   color: var(--texto-primario)
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    i {
+        display: none;
+    }
+    .time {
+        position: relative;
+        right: 9px;
+    }
+    .running {
+        color: rgb(32, 141, 32);
+    }
 }
 </style>
