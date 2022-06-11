@@ -1,7 +1,7 @@
 # Task-Tracker
 
-Vue 3 Exercise: Task-traker is a task controller, with runtime accounting.
-using Vuex, Bulma, JSON-server and AmCharts.
+Vue 3 Exercise: Task-traker is a task controller, with runtime accounting.<br>
+Using Vuex, Bulma, JSON-server and AmCharts.
 
 ## Project setup
 ```
