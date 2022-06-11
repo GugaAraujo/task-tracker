@@ -1,5 +1,6 @@
 <template>
-  <div v-if="isMounted">
+  <PagePlaceHolder v-if="isLoading"/>
+  <div v-else>
     <Formulario @aoSalvarTarefa="salvarTarefa" />
     <div class="lista container is-fluid">
       <div class="field">
@@ -15,7 +16,7 @@
           </span>
         </p>
       </div>
-      <Box v-if="listaEstaVazia"> Ainda não contabilizei nada por aqui :( </Box>
+      <Box v-if="listaEstaVazia"> ... Não encontrei nada por estas bandas.</Box>
       <Tarefa
         v-for="(tarefa, index) in tarefas"
         :key="index"
@@ -82,7 +83,7 @@
       </Modal>
     </div>
   </div>
-  <PagePlaceHolder v-else />
+
 </template>
 
 <script lang="ts">
@@ -117,7 +118,6 @@ export default defineComponent({
     return {
       tarefaSelecionada: null as ITarefa | null,
       taskAhSerExcluida: null as ITarefa | null,
-      isMounted: false,
     };
   },
   computed: {
@@ -164,12 +164,12 @@ export default defineComponent({
       }
     },
   },
-  mounted() {
-      this.isMounted = true;
-  },
   setup() {
     const store = useStore();
-    store.dispatch(OBTER_TAREFAS);
+    let isLoading = ref(true);
+
+    store.dispatch(OBTER_TAREFAS)
+      .then(() => isLoading.value = false);
     store.dispatch(OBTER_PROJETOS);
     const filtro = ref("");
 
@@ -181,6 +181,7 @@ export default defineComponent({
       tarefas: computed(() => store.state.tarefa.tarefas),
       store,
       filtro,
+      isLoading
     };
   },
 });
