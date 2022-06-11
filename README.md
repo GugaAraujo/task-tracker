@@ -1,4 +1,7 @@
-# alura-tracker
+# Task-Tracker
+
+Vue 3 Exercise: Task-traker is a task controller, with runtime accounting.
+using Vuex, Bulma, JSON-server and AmCharts.
 
 ## Project setup
 ```
@@ -19,6 +22,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
