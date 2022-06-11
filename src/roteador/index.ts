@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import Tarefas from "../views/Tarefas.vue"
 
 const rotas: RouteRecordRaw[] = [
     {
         path: "/",
         name: "Tarefas",
-        component: () => import("../views/Tarefas.vue"),
+        component: Tarefas,
     },
     {
         path: "/projetos",

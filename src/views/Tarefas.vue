@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isMounted">
     <Formulario @aoSalvarTarefa="salvarTarefa" />
     <div class="lista container is-fluid">
       <div class="field">
@@ -82,6 +82,7 @@
       </Modal>
     </div>
   </div>
+  <PagePlaceHolder v-else />
 </template>
 
 <script lang="ts">
@@ -101,6 +102,7 @@ import ITarefa from "../interfaces/Itarefa";
 import { useStore } from "../store";
 import { NOTIFICAR } from "@/store/tipo-mutacoes";
 import { TipoNotificacao } from "@/interfaces/INotificacao";
+import PagePlaceHolder from "@/components/placeholders/PagePlaceHolder.vue";
 
 export default defineComponent({
   name: "App",
@@ -109,11 +111,13 @@ export default defineComponent({
     Formulario,
     Tarefa,
     Modal,
+    PagePlaceHolder,
   },
   data() {
     return {
       tarefaSelecionada: null as ITarefa | null,
       taskAhSerExcluida: null as ITarefa | null,
+      isMounted: false,
     };
   },
   computed: {
@@ -159,6 +163,9 @@ export default defineComponent({
         throw new Error();
       }
     },
+  },
+  mounted() {
+      this.isMounted = true;
   },
   setup() {
     const store = useStore();
