@@ -14,7 +14,7 @@ export const projeto: Module<EstadoProjeto, Estado> = {
         [ADICIONA_PROJETO](state, nomeDoProjeto: string) {
             const projeto = {
                 id: new Date().toISOString(),
-                nome: nomeDoProjeto,
+                name: nomeDoProjeto,
             } as IProjeto;
             state.projetos.push(projeto);
         },
@@ -33,21 +33,21 @@ export const projeto: Module<EstadoProjeto, Estado> = {
     },
     actions: {
         [OBTER_PROJETOS]({ commit }) {
-            http.get("projetos").then((response) =>
+            http.get("/project").then((response) =>
                 commit(DEFINIR_PROJETOS, response.data)
             );
         },
         [CADASTRAR_PROJETOS](contexto, nomeDoProjeto: string) {
-            return http.post("/projetos", {
-                nome: nomeDoProjeto,
+            return http.post("/project", {
+                name: nomeDoProjeto,
             });
         },
         [ALTERAR_PROJETO](contexto, projeto: IProjeto) {
-            return http.put(`/projetos/${projeto.id}`, projeto);
+            return http.put(`/project/${projeto.id}`, projeto);
         },
         [REMOVER_PROJETO]({ commit }, id: string) {
             return http
-                .delete(`/projetos/${id}`)
+                .delete(`/project/${id}`)
                 .then(() => commit(EXCLUIR_PROJETO, id));
         },
     },
