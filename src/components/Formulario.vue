@@ -16,7 +16,7 @@
       </div>
       <div class="column is-3">
         <div class="select">
-          <select v-model="idProjeto"       
+          <select v-model="idProjeto"
             :disabled="inputHabilitados"
           >
             <option value="">Selecione o projeto</option>
@@ -25,16 +25,16 @@
               v-for="projeto in projetos"
               :key="projeto.id"
             >
-              {{ projeto.nome }}
+              {{ projeto.name }}
             </option>
           </select>
         </div>
       </div>
       <div class="column">
-        <Temporizador 
-          @aoTemporizadorFinalizado="finalizarTarefa" 
+        <Temporizador
+          @aoTemporizadorFinalizado="finalizarTarefa"
           @rodandoTarefa="alternaBloqueioInputs"
-          :botoesHabilitados="confereValores()" 
+            :botoesHabilitados="confereValores()"
         />
       </div>
     </div>
@@ -66,7 +66,7 @@ export default defineComponent({
     const alternaBloqueioInputs = () : boolean => {
       return inputHabilitados.value = !inputHabilitados.value
     }
-    
+
     const confereValores = () : boolean => {
       if(descricao.value && idProjeto.value){
         return botoesHabilitados.value = true
@@ -87,10 +87,12 @@ export default defineComponent({
       }
 
       emit("aoSalvarTarefa", {
-        duracaoEmSegundos: tempoDecorrido,
-        descricao: descricao.value,
-        projeto: projetos.value.find((proj) => proj.id === idProjeto.value),
+        duration: tempoDecorrido,
+        description: descricao.value,
+        project_name: projeto.name,
+        project_id: projeto.id,
       });
+
       descricao.value = "";
       idProjeto.value = ""
     };

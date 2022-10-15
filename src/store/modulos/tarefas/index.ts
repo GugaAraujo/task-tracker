@@ -45,26 +45,24 @@ export const tarefa: Module<EstadoTarefa, Estado> = {
             if (filtro) {
                 filtro = `descricao_like=${filtro}&`;
             }
-            const url = `tarefas?${filtro}`;
+            const url = `task?${filtro}`;
             http.get(url).then((response) =>
                 commit(DEFINIR_TAREFAS, response.data)
             );
         },
         [CADASTRAR_TAREFAS]({ commit }, tarefa: ITarefa) {
-            tarefa.date = new Date().toLocaleDateString();
-            console.log(tarefa.date);
             return http
-                .post("/tarefas", tarefa)
+                .post("/task", tarefa)
                 .then((response) => commit(ADICIONA_TAREFA, response.data));
         },
         [ALTERAR_TAREFA]({ commit }, tarefa: ITarefa) {
             return http
-                .put(`/tarefas/${tarefa.id}`, tarefa)
+                .put(`/task/${tarefa.id}`, tarefa)
                 .then(() => commit(ALTERA_TAREFA, tarefa));
         },
         [REMOVER_TAREFA]({ commit }, tarefa: ITarefa) {
             return http
-                .delete(`/tarefas/${tarefa.id}`)
+                .delete(`/task/${tarefa.id}`)
                 .then(() => commit(REMOVE_TAREFA, tarefa))
                 .catch((err) => {
                     console.log(err);

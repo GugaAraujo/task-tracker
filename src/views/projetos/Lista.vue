@@ -26,7 +26,7 @@
                         {{projeto.id}}
                     </td>
                     <td>
-                        {{projeto.nome}}
+                        {{projeto.name}}
                     </td>
                     <td>
                         <router-link :to="`/projetos/${projeto.id}`" class="button">

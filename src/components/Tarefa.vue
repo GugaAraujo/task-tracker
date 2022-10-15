@@ -4,7 +4,7 @@
       <div class="row">
         <div class="columns is-mobile">
           <div class="column is-11">
-            {{ tarefa.descricao || "Tarefa sem descrição" }}
+            {{ tarefa.description || "Tarefa sem descrição" }}
           </div>
           <div class="column is-1" @click="tarefaClicada">
             <i class="fas fa-edit"></i>
@@ -14,10 +14,10 @@
       <div class="row">
         <div class="columns is-mobile">
           <div class="column is-6">
-            {{ tarefa.projeto?.nome || "N/D" }}
+            {{ tarefa.project_name || "N/D" }}
           </div>
           <div class="column is-5">
-            <Cromometro :tempoEmSegundos="tarefa.duracaoEmSegundos" />
+            <Cromometro :tempoEmSegundos="tarefa.duration" />
           </div>
           <div class="column is-1" @click="aoExcluirTask">
             <i class="fas fa-trash"></i>

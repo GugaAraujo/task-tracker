@@ -39,7 +39,7 @@
             <input
               type="text"
               class="input"
-              v-model="tarefaSelecionada.descricao"
+              v-model="tarefaSelecionada.description"
               id="descricaoDaTarefa"
             />
           </div>
@@ -63,9 +63,9 @@
         <template v-slot:corpo>
           <div class="field has-text-centered">
             <p>
-              Desja excluir a tarefa 
+              Deseja excluir a tarefa
                 <span class="has-text-weight-medium">
-                  {{ taskAhSerExcluida.descricao }}
+                  {{ taskAhSerExcluida.description }}
                 </span>
               ?
             </p>

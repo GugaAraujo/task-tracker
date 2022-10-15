@@ -46,7 +46,7 @@ export default defineComponent({
       const projeto = store.state.projeto.projetos.find(
         (proj) => proj.id == props.id
       );
-      nomeDoProjeto.value = projeto?.nome || "";
+      nomeDoProjeto.value = projeto?.name || "";
     }
 
     const salvar = () => {
@@ -54,7 +54,7 @@ export default defineComponent({
         store
           .dispatch(ALTERAR_PROJETO, {
             id: props.id,
-            nome: nomeDoProjeto.value,
+            name: nomeDoProjeto.value,
           })
           .then(() => aoSalvarProjeto());
       } else {
