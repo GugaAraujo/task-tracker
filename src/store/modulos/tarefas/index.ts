@@ -25,7 +25,7 @@ export interface EstadoTarefa {
 export const tarefa: Module<EstadoTarefa, Estado> = {
     mutations: {
         [ADICIONA_TAREFA](state, tarefa: ITarefa) {
-            state.tarefas.push(tarefa);
+            state.tarefas.unshift(tarefa);
         },
         [DEFINIR_TAREFAS](state, tarefas: ITarefa[]) {
             state.tarefas = tarefas;
