@@ -43,7 +43,7 @@ export const tarefa: Module<EstadoTarefa, Estado> = {
     actions: {
         [OBTER_TAREFAS]({ commit }, filtro: string) {
             if (filtro) {
-                filtro = `descricao_like=${filtro}&`;
+                filtro = `filter=${filtro}`;
             }
             const url = `task?${filtro}`;
             http.get(url).then((response) =>
