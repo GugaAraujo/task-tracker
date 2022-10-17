@@ -117,7 +117,3 @@ export default defineComponent({
   background-color: var(--bg-primario);
 }
 </style>
-
-function ref(arg0: string) {
-  throw new Error("Function not implemented.");
-}
