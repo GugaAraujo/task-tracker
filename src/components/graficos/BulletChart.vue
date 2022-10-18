@@ -37,9 +37,10 @@ export default defineComponent({
   },
   methods: {
     iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs["bulletChart"], am4charts.XYChart);
+      const sortedData = data.sort((a, b) => b.duration - a.duration);
 
-      chart.data = data;
+      let chart = am4core.create(this.$refs["bulletChart"], am4charts.XYChart);
+      chart.data = sortedData;
 
       // Add and configure Series
       var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
