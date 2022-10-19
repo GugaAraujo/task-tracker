@@ -1,10 +1,10 @@
 <template>
   <main
     class="columns is-gapless is-multiline"
-    :class="{ 'modo-escuro': modoEscuroAtivo }"
+    :class="{ 'modo-escuro': darkMode }"
   >
     <div class="column is-one-quarter menu">
-      <BarraLateral @aoTemaAlterado="trocarTema" />
+      <BarraLateral @aoTemaAlterado="changeTheme" />
     </div>
     <div class="column is-three-quarter conteudo">
       <notificacoes />
@@ -13,28 +13,15 @@
   </main>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import BarraLateral from "./components/BarraLateral.vue";
 import Notificacoes from "./components/Notificacoes.vue";
 
-export default defineComponent({
-  name: "App",
-  components: {
-    BarraLateral,
-    Notificacoes,
-  },
-  data() {
-    return {
-      modoEscuroAtivo: false,
-    };
-  },
-  methods: {
-    trocarTema(modoEscuroAtivo: boolean): void {
-      this.modoEscuroAtivo = modoEscuroAtivo;
-    },
-  },
-});
+let darkMode = ref(false);
+function changeTheme(changedTheme: boolean): void {
+  darkMode.value = changedTheme;
+}
 </script>
 
 <style lang="scss">
@@ -62,7 +49,7 @@ main.modo-escuro {
 }
 
 .menu {
-    position: sticky;
+  position: sticky;
   display: inline-block;
   vertical-align: top;
   max-height: 100vh;
@@ -73,7 +60,6 @@ main.modo-escuro {
 
 .conteudo {
   display: inline-block;
-
   min-height: 600px;
   max-height: 100vh;
   background-image: linear-gradient(
@@ -87,7 +73,7 @@ main.modo-escuro {
 
 @media only screen and (max-width: 768px) {
 .menu {
-    position: unset;
+  position: unset;
   display: block;
   max-height: 100vh;
   overflow-y: auto;
@@ -107,13 +93,5 @@ main.modo-escuro {
   );
  overflow-y: scroll;
 }
-
-
-
-
-
-
 }
-
-
 </style>

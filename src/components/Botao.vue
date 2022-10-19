@@ -1,45 +1,27 @@
 <template>
     <button class="button"
-        @click="clicado"
-        :disabled="desabilitado"
+        @click="onClicked"
+        :disabled="desabled"
     >
         <span class="icon">
-            <i :class="icone"></i>
+            <i :class="icon"></i>
         </span>
         <span class="text-button">
-            {{ texto }}
+            {{ text }}
         </span>
     </button>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'Botao',
-  emits: ['clicado'],
-  props: {
-      desabilitado: {
-          type: Boolean
-      },
-      icone: {
-          type: String,
-          required: true
-      },
-      texto: {
-          type: String,
-          required: true
-      }
-  },
-  methods: {
-      clicado () : void {
-          this.$emit('clicado')
-      }
-  }
+<script setup lang="ts">
+const emit = defineEmits(['onClicked']);
+defineProps({
+    desabled: Boolean,
+    icon: String,
+    text: String,
 })
+function onClicked (): void {
+    emit('onClicked')
+}
 </script>
-
-
 <style lang="scss">
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
     .button {

@@ -1,49 +1,34 @@
 <template>
     <div class="notificacoes">
         <article class="message"
-            :class="contexto[notificacao.tipo]"
-            v-for="notificacao in notificacoes" 
-            :key="notificacao.id"
+            :class="contexto[notification.tipo]"
+            v-for="notification in notifications"
+            :key="notification.id"
         >
             <div class="message-header">
                 <p>
-                    {{ notificacao.titulo }}
+                    {{ notification.titulo }}
                 </p>
                 <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">
-                {{ notificacao.texto }}
+                {{ notification.texto }}
             </div>
         </article>
     </div>
 </template>
-
-<script lang="ts">
+<script setup lang="ts">
 import { TipoNotificacao } from '@/interfaces/INotificacao'
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
 import { useStore } from '../store'
-
-export default defineComponent({
-    name: 'Notificacoes',
-    data(){
-        return {
-            contexto: {
-                [TipoNotificacao.SUCESSO] : 'is-success',
-                [TipoNotificacao.ATENCAO]: 'is-warning',
-                [TipoNotificacao.FALHA]: 'is-danger'
-            }
-        }
-    },
-    setup () {
-        const store = useStore()
-        return {
-            notificacoes: computed(() => store.state.notificacoes)
-        }
-    }
-})
+const contexto = {
+    [TipoNotificacao.SUCESSO]: 'is-success',
+    [TipoNotificacao.ATENCAO]: 'is-warning',
+    [TipoNotificacao.FALHA]: 'is-danger'
+};
+const store = useStore();
+const notifications = computed(() => store.state.notificacoes);
 </script>
-
-
 <style scoped>
 .notificacoes{
     position: absolute;

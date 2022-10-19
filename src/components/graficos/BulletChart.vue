@@ -1,152 +1,141 @@
 <template>
-  <div id="bulletChart" ref="bulletChart"></div>
+  <div v-if="data.length" id="bulletChart" ref="bulletChart"></div>
+  <div v-else>
+    <p class="mt-4 hero-body has-text-centered is-size-5 has-text-info-dark">Não há dados</p>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
+<script setup lang="ts">
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import colorsChart from "@/utils/colorsChart";
+import { onBeforeMount, onMounted, ref } from "vue";
 
 am4core.useTheme(am4themes_animated);
 am4core.addLicense("ch-custom-attribuition");
 
-export default defineComponent({
-  name: "BulletChart",
-  props: {
-    dados: {
-      type: Object,
-      required: true,
-    },
-    propriedade: {
-      type: String,
-      required: true,
-    },
-    valor: {
-      type: String,
-      required: true,
-    },
-    isMobile: {
-      type: Boolean,
-    },
-    isTime: {
-      type: Boolean,
-    },
-  },
-  methods: {
-    iniciaGrafico(data) {
-      const sortedData = data.sort((a, b) => b.duration - a.duration);
+const props = defineProps<{
+  data: unknown[],
+  property: string,
+  value: string,
+  isMobile?: boolean,
+  isTime?: boolean,
+}>()
 
-      let chart = am4core.create(this.$refs["bulletChart"], am4charts.XYChart);
-      chart.data = sortedData;
+const bulletChart = ref(null);
+const chartRef = ref(null);
 
-      // Add and configure Series
-      var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
-      categoryAxis.renderer.grid.template.location = 0;
-      categoryAxis.dataFields.category = this.propriedade;
-      categoryAxis.renderer.minGridDistance = 1;
-      categoryAxis.renderer.inversed = true;
-      categoryAxis.renderer.grid.template.disabled = true;
-      let label = categoryAxis.renderer.labels.template;
-      label.truncate = true;
-      label.maxWidth = 240;
+function iniciaGrafico(data) {
+  const sortedData = data.sort((a, b) => b.duration - a.duration);
 
-      var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
-      valueAxis.min = 0;
-      valueAxis.renderer.labels.template.disabled = true;
-      //Indicando a propriedade e o valor exibido no gráfico
-      var series = chart.series.push(new am4charts.ColumnSeries());
-      series.dataFields.categoryY = this.propriedade;
-      series.dataFields.valueX = this.valor;
-      series.tooltipText = "{valueX.value}";
-      series.columns.template.strokeOpacity = 0;
-      series.columns.template.column.cornerRadiusBottomRight = 5;
-      series.columns.template.column.cornerRadiusTopRight = 5;
+  let chart = am4core.create(bulletChart.value, am4charts.XYChart);
+  chart.data = sortedData;
 
-      // Cores diferentes para cada barra
+  // Add and configure Series
+  var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+  categoryAxis.renderer.grid.template.location = 0;
+  categoryAxis.dataFields.category = props.property;
+  categoryAxis.renderer.minGridDistance = 1;
+  categoryAxis.renderer.inversed = true;
+  categoryAxis.renderer.grid.template.disabled = true;
+  let label = categoryAxis.renderer.labels.template;
+  label.truncate = true;
+  label.maxWidth = 240;
 
-      // Estabelecendo Paleta de Cores
-      chart.colors.list = colorsChart;
+  var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+  valueAxis.min = 0;
+  valueAxis.renderer.labels.template.disabled = true;
+  //Indicando a propriedade e o valor exibido no gráfico
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.dataFields.categoryY = props.property;
+  series.dataFields.valueX = props.value;
+  series.tooltipText = "{valueX.value}";
+  series.columns.template.strokeOpacity = 0;
+  series.columns.template.column.cornerRadiusBottomRight = 5;
+  series.columns.template.column.cornerRadiusTopRight = 5;
 
-      series.columns.template.adapter.add("fill", function (fill, target) {
-        return chart.colors.getIndex(target.dataItem.index);
-      });
+  // Cores diferentes para cada barra
 
-      var labelBullet = series.bullets.push(new am4charts.LabelBullet());
-      labelBullet.label.horizontalCenter = "left";
-      labelBullet.label.dx = 10;
-      labelBullet.label.text = "{values.valueX.workingValue}";
-      labelBullet.locationX = 1;
-      labelBullet.label.truncate = false;
+  // Estabelecendo Paleta de Cores
+  chart.colors.list = colorsChart;
 
-      if (this.isMobile) {
-        chart.responsive.enabled = true;
-        this.labelMobile(labelBullet);
-      } else {
-        this.labelDesktop(labelBullet);
-      }
+  series.columns.template.adapter.add("fill", function (fill, target) {
+    return chart.colors.getIndex(target.dataItem.index);
+  });
 
-      // Ajustando a Div de acordo com a quantidade de dados
-      this.settingSizeDiv(chart);
+  var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+  labelBullet.label.horizontalCenter = "left";
+  labelBullet.label.dx = 10;
+  labelBullet.label.text = "{values.valueX.workingValue}";
+  labelBullet.locationX = 1;
+  labelBullet.label.truncate = false;
 
-      //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
-      series.calculatePercent = true;
-      chart.numberFormatter.numberFormat = "#.#";
+  if (props.isMobile) {
+    chart.responsive.enabled = true;
+    labelMobile(labelBullet);
+  } else {
+    labelDesktop(labelBullet);
+  }
 
-      //descarregando os gráficos não utilizados da memória
-      am4core.options.autoDispose = true;
-      this.chart = chart;
-    },
-    settingSizeDiv(chart) {
-      // Set cell size in pixels
-      var cellSize = 30;
-      chart.events.on("datavalidated", function (ev) {
-        // Get objects of interest
-        var chart = ev.target;
-        var categoryAxis = chart.yAxes.getIndex(0);
+  // Ajustando a Div de acordo com a quantidade de dados
+  settingSizeDiv(chart);
 
-        // Calculate how we need to adjust chart height
-        var adjustHeight =
-          chart.data.length * cellSize - categoryAxis.pixelHeight;
+  //BARRAS COM NUMEROS ABSOLUTOS E PORCENTAGEM
+  series.calculatePercent = true;
+  chart.numberFormatter.numberFormat = "#.#";
 
-        // get current chart height
-        var targetHeight = chart.pixelHeight + adjustHeight;
+  //descarregando os gráficos não utilizados da memória
+  am4core.options.autoDispose = true;
+  chartRef.value = chart;
+}
+function settingSizeDiv(chart) {
+  // Set cell size in pixels
+  var cellSize = 30;
+  chart.events.on("datavalidated", function (ev) {
+    // Get objects of interest
+    var chart = ev.target;
+    var categoryAxis = chart.yAxes.getIndex(0);
 
-        // Set it on chart's container
-        chart.svgContainer.htmlElement.style.height = targetHeight + "px";
-      });
+    // Calculate how we need to adjust chart height
+    var adjustHeight =
+      chart.data.length * cellSize - categoryAxis.pixelHeight;
 
-      return chart;
-    },
-    labelDesktop(labelBullet): am4charts.LabelBullet {
-      //verifica se é Tempo ou Unidade
-      this.isTime
-        ? (labelBullet.label.text =
-            "{valueX.formatDuration('hh:mm:ss')} ({valueX.percent}%)")
-        : (labelBullet.label.text =
-            "{valueX} [font-size:12px]({valueX.percent}%)[/]");
+    // get current chart height
+    var targetHeight = chart.pixelHeight + adjustHeight;
 
-      return labelBullet;
-    },
-    labelMobile(labelBullet): am4charts.LabelBullet {
-      //verifica se é Tempo ou Unidade
-      this.isTime
-        ? (labelBullet.label.text = "[font-size:14px]{valueX.percent}%[/]")
-        : (labelBullet.label.text =
-            "{valueX} [font-size:12px]({valueX.percent}%)[/]");
+    // Set it on chart's container
+    chart.svgContainer.htmlElement.style.height = targetHeight + "px";
+  });
 
-      return labelBullet;
-    },
-  },
-  mounted() {
-    this.iniciaGrafico(this.dados);
-  },
-  beforeUnmount() {
-    if (this.charts) {
-      this.charts.dispose();
-    }
-  },
-});
+  return chart;
+}
+function labelDesktop(labelBullet): am4charts.LabelBullet {
+  //verifica se é Tempo ou Unidade
+  props.isTime
+    ? (labelBullet.label.text =
+        "{valueX.formatDuration('hh:mm:ss')} ({valueX.percent}%)")
+    : (labelBullet.label.text =
+        "{valueX} [font-size:12px]({valueX.percent}%)[/]");
+
+  return labelBullet;
+}
+function labelMobile(labelBullet): am4charts.LabelBullet {
+  //verifica se é Tempo ou Unidade
+  props.isTime
+    ? (labelBullet.label.text = "[font-size:14px]{valueX.percent}%[/]")
+    : (labelBullet.label.text =
+        "{valueX} [font-size:12px]({valueX.percent}%)[/]");
+
+  return labelBullet;
+}
+onMounted(() => {
+  iniciaGrafico(props.data);
+})
+onBeforeMount(() => {
+  if (chartRef.value) {
+    chartRef.value.dispose();
+  }
+})
+
 </script>
