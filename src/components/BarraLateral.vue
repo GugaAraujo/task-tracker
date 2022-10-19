@@ -3,7 +3,7 @@
     <h1 class="brand">Task Tracker</h1>
     <div class="switch-darkmode">
       <p class="mb-2">Dark mode:</p>
-      <Toggle v-model="modoEscuroAtivo" class="toggle-blue">
+      <Toggle v-model="darkMode" class="toggle-blue">
         <template v-slot:label="{ checked, classList }">
           <span :class="classList.label">{{ checked ? "On" : "Off" }}</span>
         </template>
@@ -34,32 +34,19 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import Toggle from "@vueform/toggle";
+import { ref, watch } from "vue";
 
-export default defineComponent({
-  name: "BarraLateral",
-  emits: ["aoTemaAlterado"],
-  components: {
-    Toggle,
-  },
-  data() {
-    return {
-      modoEscuroAtivo: false,
-    };
-  },
-  methods: {
-    alterarTema() {
-      this.$emit("aoTemaAlterado", this.modoEscuroAtivo);
-    },
-  },
-  watch: {
-    modoEscuroAtivo() {
-      this.alterarTema();
-    },
-  },
-});
+const emit = defineEmits(["aoTemaAlterado"])
+const darkMode = ref(false);
+
+function changeTheme() {
+  emit("aoTemaAlterado", darkMode.value);
+}
+watch(darkMode, () => {
+  changeTheme();
+})
 </script>
 
 <style lang="scss" scoped>

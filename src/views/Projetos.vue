@@ -1,15 +1,10 @@
 <template>
-    <div class="projetos ">
+    <div class="projetos">
         <router-view></router-view>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-    name:'Projetos'
-})
+<script setup lang="ts">
 </script>
 
 <style scoped>

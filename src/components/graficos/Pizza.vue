@@ -1,128 +1,114 @@
 <template>
-  <div id="pieChart" ref="pieChart"></div>
+  <div v-if="data.length" id="pieChart" ref="pieChart"></div>
+  <div v-else>
+    <p class="mt-4 hero-body has-text-centered is-size-5 has-text-info-dark">Não há dados</p>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
+<script setup lang="ts">
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import colorsChart from "@/utils/colorsChart";
+import { onBeforeMount, onMounted, ref } from "vue";
 
 am4core.useTheme(am4themes_animated);
 am4core.addLicense("ch-custom-attribuition");
 
-export default defineComponent({
-  name: "Pizza",
-  props: {
-    dados: {
-      type: Object,
-      required: true,
-    },
-    propriedade: {
-      type: String,
-      required: true,
-    },
-    valor: {
-      type: String,
-      required: true,
-    },
-    isMobile: {
-      type: Boolean,
-    },
-    isTime: {
-      type: Boolean,
-    },
-  },
-  methods: {
-    iniciaGrafico(data) {
-      let chart = am4core.create(this.$refs["pieChart"], am4charts.PieChart);
-      chart.data = data;
+const props = defineProps<{
+  data: unknown[],
+  property: string,
+  value: string,
+  isMobile?: boolean,
+  isTime?: boolean,
+}>()
 
-      // Add and configure Series
-      let pieSeries = chart.series.push(new am4charts.PieSeries());
+const pieChart = ref(null);
+const chartRef = ref(null);
 
-      // Estabelecendo Paleta de Cores
-      pieSeries.colors.list = colorsChart;
+function iniciaGrafico(data) {
+  let chart = am4core.create(pieChart.value, am4charts.PieChart);
+  chart.data = data;
 
-      //Indicando a propriedade e o valor exibido no gráfico
-      pieSeries.dataFields.category = this.propriedade;
-      pieSeries.dataFields.value = this.valor;
+  // Add and configure Series
+  let pieSeries = chart.series.push(new am4charts.PieSeries());
 
-      if (this.isMobile) {
-        this.chartMobile(chart);
-        this.seriesMobile(pieSeries);
-      } else {
-        this.chartDesktop(chart);
-      }
+  // Estabelecendo Paleta de Cores
+  pieSeries.colors.list = colorsChart;
 
-      this.loadAnimation(pieSeries);
+  //Indicando a propriedade e o valor exibido no gráfico
+  pieSeries.dataFields.category = props.property;
+  pieSeries.dataFields.value = props.value;
 
-      //descarregando os gráficos não utilizados da memória
-      am4core.options.autoDispose = true;
+  if (props.isMobile) {
+    chartMobile(chart);
+    seriesMobile(pieSeries);
+  } else {
+    chartDesktop(chart);
+  }
 
-      this.chart = chart;
-    },
-    loadAnimation(series): am4charts.PieSeries {
-      series.hiddenState.properties.opacity = 1;
-      series.hiddenState.properties.endAngle = -90;
-      series.hiddenState.properties.startAngle = -90;
+  loadAnimation(pieSeries);
 
-      return series;
-    },
-    chartDesktop(chart): am4charts.PieChart {
-      chart.legend = new am4charts.Legend();
-      chart.legend.labels.template.text = `{${this.propriedade}}:`;
-      chart.legend.valueLabels.template.text = `{${this.valor}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
+  //descarregando os gráficos não utilizados da memória
+  am4core.options.autoDispose = true;
 
-      chart.legend.maxHeight = 60;
-      chart.legend.scrollable = true;
+  chartRef.value = chart;
+}
+function loadAnimation(series): am4charts.PieSeries {
+  series.hiddenState.properties.opacity = 1;
+  series.hiddenState.properties.endAngle = -90;
+  series.hiddenState.properties.startAngle = -90;
 
-      var markerTemplate = chart.legend.markers.template;
-      markerTemplate.width = 15;
-      markerTemplate.height = 15;
-      chart.legend.fontSize = 15;
-      chart.legend.dy = 5;
+  return series;
+}
+function chartDesktop(chart): am4charts.PieChart {
+  chart.legend = new am4charts.Legend();
+  chart.legend.labels.template.text = `{${props.property}}:`;
+  chart.legend.valueLabels.template.text = `{${props.value}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
 
-      return chart;
-    },
-    chartMobile(chart): am4charts.PieChart {
-      chart.responsive.enabled = true;
+  chart.legend.maxHeight = 60;
+  chart.legend.scrollable = true;
 
-      chart.legend = new am4charts.Legend();
-      chart.legend.labels.template.text = `{${this.propriedade}}:`;
-      chart.legend.valueLabels.template.text = `{${this.valor}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
+  var markerTemplate = chart.legend.markers.template;
+  markerTemplate.width = 15;
+  markerTemplate.height = 15;
+  chart.legend.fontSize = 15;
+  chart.legend.dy = 5;
 
-      chart.legend.position = "right";
-      chart.legend.maxWidth = 280;
-      chart.legend.maxHeight = 300;
-      chart.legend.scrollable = true;
+  return chart;
+}
+function chartMobile(chart): am4charts.PieChart {
+  chart.responsive.enabled = true;
 
-      var markerTemplate = chart.legend.markers.template;
-      markerTemplate.width = 15;
-      markerTemplate.height = 15;
+  chart.legend = new am4charts.Legend();
+  chart.legend.labels.template.text = `{${props.property}}:`;
+  chart.legend.valueLabels.template.text = `{${props.value}.formatNumber('#.#')} [font-size:15px]({value.percent.formatNumber('#,###.##')}%)[/]`;
 
-      return chart;
-    },
-    seriesMobile(series): am4charts.PieSeries {
-      series.ticks.template.disabled = true;
-      series.labels.template.disabled = true;
-      return series;
-    },
-  },
-  mounted() {
-    this.iniciaGrafico(this.dados);
-  },
-  beforeUnmount() {
-    if (this.charts) {
-      this.charts.dispose();
-    }
-  },
-});
+  chart.legend.position = "right";
+  chart.legend.maxWidth = 280;
+  chart.legend.maxHeight = 300;
+  chart.legend.scrollable = true;
+
+  var markerTemplate = chart.legend.markers.template;
+  markerTemplate.width = 15;
+  markerTemplate.height = 15;
+
+  return chart;
+}
+function seriesMobile(series): am4charts.PieSeries {
+  series.ticks.template.disabled = true;
+  series.labels.template.disabled = true;
+  return series;
+}
+onMounted(() => {
+  iniciaGrafico(props.data);
+})
+onBeforeMount(() => {
+  if (chartRef.value) {
+    chartRef.value.dispose();
+  }
+})
 </script>
-
-
 <style lang="scss">
 #pieChart {
   width: 100%;

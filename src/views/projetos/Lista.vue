@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="projeto in projetos" :key="projeto.id">
+                <tr v-for="projeto in Allprojects" :key="projeto.id">
                     <td>
                         {{projeto.id}}
                     </td>
@@ -34,7 +34,7 @@
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
                         </router-link>
-                        <button class="button ml-2 is-danger" @click="excluir(projeto.id)">
+                        <button class="button ml-2 is-danger" @click="exclude(projeto.id)">
                             <span class="icon is-small">
                                 <i class="fas fa-trash"></i>
                             </span>
@@ -46,27 +46,18 @@
     </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { OBTER_PROJETOS, REMOVER_PROJETO } from '@/store/tipo-acoes'
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
 import { useStore } from '../../store'
 
-export default defineComponent({
-    name:'Lista',
-    methods: {
-        excluir (id: string) {
-            this.store.dispatch(REMOVER_PROJETO, id)
-        }
-    },
-    setup () {
-        const store = useStore()
-        store.dispatch(OBTER_PROJETOS)
-        return {
-            projetos: computed(()=> store.state.projeto.projetos),
-            store
-        }
-    }
-})
+const store = useStore()
+store.dispatch(OBTER_PROJETOS)
+const Allprojects = computed(() => store.state.projeto.projetos);
+
+function exclude (id: string) {
+    store.dispatch(REMOVER_PROJETO, id);
+}
 </script>
 
 <style lang="scss" scoped>

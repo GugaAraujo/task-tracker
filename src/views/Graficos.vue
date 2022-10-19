@@ -23,8 +23,8 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <span v-if="tarefas?.length" class="unidades">
-                  {{ tarefas.length }}
+                <span v-if="allTasks" class="unidades">
+                  {{ allTasks.length || 0 }}
                 </span>
                 <bounce-loader
                   v-else
@@ -52,8 +52,8 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <span v-if="projetos?.length" class="unidades">
-                  {{ projetos.length }}
+                <span v-if="allProjects" class="unidades">
+                  {{ allProjects.length || 0 }}
                 </span>
                 <bounce-loader
                   v-else
@@ -82,7 +82,7 @@
             <div class="columns">
               <div class="column is-12 card-info-body">
                 <span class="soma-horas">
-                  {{ formataHora(totalDuration) }}
+                  {{ formatHour(totalDuration) }}
                 </span>
               </div>
             </div>
@@ -105,7 +105,7 @@
           <div class="row">
             <div class="columns">
               <div class="column is-12 card-info-body">
-                <div v-if="longestTask?.description" class="row">
+                <div v-if="longestTask" class="row">
                   <div class="row">
                     <span class="maior-demanda">
                       {{ longestTask?.description }}
@@ -115,7 +115,7 @@
                     <p>
                       {{
                         longestTask?.duration
-                          ? formataHora(longestTask.duration)
+                          ? formatHour(longestTask.duration)
                           : ""
                       }}
                     </p>
@@ -146,9 +146,9 @@
           <div class="columns card-chart-body">
             <div v-if="countProjectName" class="column">
               <Pizza
-                :dados="countProjectName"
-                propriedade="project_name"
-                valor="quantity"
+                :data="countProjectName"
+                property="project_name"
+                value="quantity"
                 :isMobile="true"
               />
             </div>
@@ -176,9 +176,9 @@
           <div class="columns card-chart-body">
             <div v-if="durationList" class="column">
               <BulletChart
-                :dados="durationList"
-                propriedade="description"
-                valor="duration"
+                :data="durationList"
+                property="description"
+                value="duration"
                 divName="projeto-por-tipo"
                 :isTime="true"
                 :isMobile="true"
@@ -208,9 +208,9 @@
           <div class="columns card-chart-body">
             <div v-if="countProjectName" class="column">
               <Pizza
-                :dados="countProjectName"
-                propriedade="project_name"
-                valor="quantity"
+                :data="countProjectName"
+                property="project_name"
+                value="quantity"
               />
             </div>
             <moon-loader
@@ -237,9 +237,9 @@
           <div class="columns card-chart-body">
             <div v-if="durationList" class="column">
               <BulletChart
-                :dados="durationList"
-                propriedade="description"
-                valor="duration"
+                :data="durationList"
+                property="description"
+                value="duration"
                 divName="projeto-por-tipo"
                 :isTime="true"
               />
@@ -257,8 +257,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "../store";
 import http from "@/http";
 import Pizza from "@/components/graficos/Pizza.vue";
@@ -267,68 +267,52 @@ import { OBTER_PROJETOS, OBTER_TAREFAS } from "@/store/tipo-acoes";
 import BounceLoader from "vue-spinner/src/BounceLoader.vue";
 import MoonLoader from "vue-spinner/src/MoonLoader.vue";
 
-export default defineComponent({
-  name: "Graficos",
-  data() {
-    return {
-      durationList: null,
-      totalDuration: 0,
-      longestTask: null,
-      countProjectName: null,
-    };
-  },
-  components: {
-    MoonLoader,
-    BounceLoader,
-    Pizza,
-    BulletChart,
-  },
-  computed: {
-    totalDurationFormatada(): string {
-      return new Date(this.totalDuration * 1000)
-        .toISOString()
-        .substr(11, 8);
-    },
-  },
-  methods: {
-    formataHora(data: number): string {
-      return new Date(data * 1000).toISOString().substr(11, 8);
-    },
-    async getTasks() {
-      return await http.get('/task')
-        .then((response) => response.data);
-    },
-    async getProjects() {
-      return await http.get('/task/count/project')
-        .then((response) => response.data);
-    },
-    async getTotalDuration() {
-      return await http.get('/task/sum/duration')
-        .then((response) => response.data?.total);
-    },
-    async getLongestTask() {
-      return await http.get('/task/longest')
-        .then((response) => response.data);
-    },
-  },
-  async mounted() {
-    this.durationList = await this.getTasks();
-    this.countProjectName = await this.getProjects();
-    this.totalDuration = await this.getTotalDuration();
-    this.longestTask = await this.getLongestTask();
-  },
-  setup() {
-    const store = useStore();
-    store.dispatch(OBTER_TAREFAS);
-    store.dispatch(OBTER_PROJETOS);
+const store = useStore();
+store.dispatch(OBTER_TAREFAS);
+store.dispatch(OBTER_PROJETOS);
 
-    return {
-      tarefas: computed(() => store.state.tarefa.tarefas),
-      projetos: computed(() => store.state.projeto.projetos),
-      store,
-    };
-  },
+const allTasks = computed(() => store.state.tarefa.tarefas);
+const allProjects = computed(() => store.state.projeto.projetos);
+
+let durationList = ref(null);
+let countProjectName = ref(null);
+let totalDuration = ref(0);
+let longestTask = ref({
+  description: 'Não há task cadastrada',
+  duration: 0,
 });
+
+function formatHour (data: number): string {
+  return new Date(data * 1000).toISOString().substr(11, 8);
+}
+async function getTasks () {
+  return await http.get('/task')
+    .then((response) => durationList.value = response.data);
+}
+async function getProjects () {
+  return await http.get('/task/count/project')
+    .then((response) => countProjectName.value = response.data);
+}
+async function getTotalDuration () {
+  return await http.get('/task/sum/duration')
+    .then((response) => totalDuration.value = response.data?.total);
+}
+async function getLongestTask () {
+  return await http.get('/task/longest')
+    .then((response) => {
+      if (response.data) {
+        longestTask.value = response.data
+      }
+    });
+}
+
+onMounted(async () => {
+  await getTasks();
+  await getProjects();
+  await getTotalDuration();
+  await getLongestTask();
+});
+
 </script>
 
 <style lang="scss" scoped>

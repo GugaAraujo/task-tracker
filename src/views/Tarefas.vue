@@ -1,84 +1,58 @@
 <template>
-  <PagePlaceHolder v-if="isLoading"/>
+  <PagePlaceHolder v-if="isLoading" />
   <div v-else>
-    <Formulario @aoSalvarTarefa="salvarTarefa" />
+    <Formulario @onSaveTask="saveTask" />
     <div class="lista container is-fluid">
       <div class="field">
         <p class="control has-icons-left">
-          <input
-            class="input"
-            type="text"
-            placeholder="Filtrar por título"
-            v-model="filtro"
-          />
+          <input class="input" type="text" placeholder="Filtrar por título" v-model="filter" />
           <span class="icon is-small is-left">
             <i class="fas fa-search"></i>
           </span>
         </p>
       </div>
       <Box v-if="listaEstaVazia"> ... Não encontrei nada por estas bandas.</Box>
-      <Tarefa
-        v-for="(tarefa, index) in tarefas"
-        :key="index"
-        :tarefa="tarefa"
-        @aoExcluirTask="abrirModalExcluirTask"
-        @aoTarefaClicada="selecionarTarefa"
-      />
-      <Modal :mostrarModal="tarefaSelecionada != null">
+      <Tarefa v-for="(tarefa, index) in allTasks" :key="index" :task="tarefa" @onClickToExclude="openModalToExclude"
+        @onClickToEdit="selectTask" />
+      <Modal :showModal="taskToUpdate != null">
         <template v-slot:cabecalho>
           <p class="modal-card-title">Editando uma tarefa</p>
-          <button
-            @click="fecharModal"
-            class="delete"
-            aria-label="close"
-          ></button>
+          <button @click="closeModal" class="delete" aria-label="close"></button>
         </template>
         <template v-slot:corpo>
           <div class="field">
             <label for="descricaoDaTarefa" class="label"> Descrição </label>
-            <input
-              type="text"
-              class="input"
-              v-model="tarefaSelecionada.description"
-              id="descricaoDaTarefa"
-            />
+            <input type="text" class="input" v-model="taskToUpdate.description" id="descricaoDaTarefa" />
           </div>
         </template>
         <template v-slot:rodape>
-          <button @click="alterarTarefa" class="button is-success">
+          <button @click="updateTask" class="button is-success">
             Salvar alterações
           </button>
-          <button @click="fecharModal" class="button">Cancelar</button>
+          <button @click="closeModal" class="button">Cancelar</button>
         </template>
       </Modal>
-      <Modal :mostrarModal="taskAhSerExcluida != null">
+      <Modal :showModal="taskToExclude != null">
         <template v-slot:cabecalho>
           <p class="modal-card-title">Exclusão de tarefa</p>
-          <button
-            @click="fecharModal"
-            class="delete"
-            aria-label="close"
-          ></button>
+          <button @click="closeModal" class="delete" aria-label="close"></button>
         </template>
         <template v-slot:corpo>
           <div class="field has-text-centered">
             <p>
               Deseja excluir a tarefa
-                <span class="has-text-weight-medium">
-                  {{ taskAhSerExcluida.description }}
-                </span>
+              <span class="has-text-weight-medium">
+                {{ taskToExclude.description }}
+              </span>
               ?
             </p>
           </div>
         </template>
         <template v-slot:rodape>
-          <button
-            @click="deletarTask()"
-            class="button is-danger"
-          >
+          <button @click="deleteTask()" class="button is-danger">
             Deletar task
           </button>
-          <button @click="fecharModal" class="button">Cancelar</button>
+          <button @click="closeModal" class="button">Cancelar</button>
         </template>
       </Modal>
     </div>
@@ -86,7 +60,7 @@
 
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   ALTERAR_TAREFA,
   CADASTRAR_TAREFAS,
@@ -94,7 +68,7 @@ import {
   OBTER_TAREFAS,
   REMOVER_TAREFA,
 } from "@/store/tipo-acoes";
-import { computed, defineComponent, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import Box from "../components/Box.vue";
 import Modal from "../components/Modal.vue";
 import Formulario from "../components/Formulario.vue";
@@ -105,84 +79,64 @@ import { NOTIFICAR } from "@/store/tipo-mutacoes";
 import { TipoNotificacao } from "@/interfaces/INotificacao";
 import PagePlaceHolder from "@/components/placeholders/PagePlaceHolder.vue";
 
-export default defineComponent({
-  name: "App",
-  components: {
-    Box,
-    Formulario,
-    Tarefa,
-    Modal,
-    PagePlaceHolder,
-  },
-  data() {
-    return {
-      tarefaSelecionada: null as ITarefa | null,
-      taskAhSerExcluida: null as ITarefa | null,
-    };
-  },
-  computed: {
-    listaEstaVazia(): boolean {
-      return this.tarefas?.length === 0;
-    },
-  },
-  methods: {
-    abrirModalExcluirTask(tarefa: ITarefa) {
-      this.taskAhSerExcluida = tarefa;
-    },
-    salvarTarefa(tarefa: ITarefa): void {
-      this.store.dispatch(CADASTRAR_TAREFAS, tarefa);
-    },
-    selecionarTarefa(tarefa: ITarefa) {
-      this.tarefaSelecionada = tarefa;
-    },
-    fecharModal() {
-      this.tarefaSelecionada = null;
-      this.taskAhSerExcluida = null;
-    },
-    alterarTarefa() {
-      this.store
-        .dispatch(ALTERAR_TAREFA, this.tarefaSelecionada)
-        .then(() => this.fecharModal());
-    },
-    atualziarTasks(){
-      this.store.dispatch(OBTER_TAREFAS);
-      this.fecharModal()
-    },
-    deletarTask() {
-      try {
-        this.store
-          .dispatch(REMOVER_TAREFA, this.taskAhSerExcluida)
-          .then(() => this.atualziarTasks());
-      } catch (error) {
-        this.fecharModal();
-        this.store.commit(NOTIFICAR, {
-          titulo: "Ops!",
-          texto: "Falha ao deletar",
-          tipo: TipoNotificacao.FALHA,
-        });
-        throw new Error();
-      }
-    },
-  },
-  setup() {
-    const store = useStore();
-    let isLoading = ref(true);
+const store = useStore();
+const filter = ref("");
+let taskToUpdate = ref(null);
+let taskToExclude = ref(null);
+let isLoading = ref(true);
+const allTasks = computed((): ITarefa[] => store.state.tarefa.tarefas);
+const listaEstaVazia = computed((): boolean => store.state.tarefa.tarefas?.length === 0);
 
-    store.dispatch(OBTER_TAREFAS)
-      .then(() => isLoading.value = false);
-    store.dispatch(OBTER_PROJETOS);
-    const filtro = ref("");
-
-    watchEffect(() => {
-      store.dispatch(OBTER_TAREFAS, filtro.value);
-    });
-
-    return {
-      tarefas: computed(() => store.state.tarefa.tarefas),
-      store,
-      filtro,
-      isLoading
-    };
-  },
+watchEffect(() => {
+  store.dispatch(OBTER_TAREFAS, filter.value);
 });
+
+store.dispatch(OBTER_TAREFAS)
+  .then(() => isLoading.value = false);
+store.dispatch(OBTER_PROJETOS);
+
+const deleteTask = (): void => {
+  try {
+    store
+      .dispatch(REMOVER_TAREFA, taskToExclude.value)
+      .then(() => getTasks());
+  } catch (error) {
+    closeModal();
+    store.commit(NOTIFICAR, {
+      titulo: "Ops!",
+      texto: "Falha ao deletar",
+      tipo: TipoNotificacao.FALHA,
+    });
+    throw new Error();
+  }
+};
+
+const closeModal = (): void => {
+  taskToUpdate.value = null;
+  taskToExclude.value = null;
+};
+
+const getTasks = (): void => {
+  store.dispatch(OBTER_TAREFAS);
+  closeModal();
+};
+
+const selectTask = (tarefa: ITarefa): void => {
+  taskToUpdate.value = tarefa;
+};
+
+const updateTask = (): void => {
+  store
+    .dispatch(ALTERAR_TAREFA, taskToUpdate.value)
+    .then(() => closeModal());
+};
+
+const openModalToExclude = (tarefa: ITarefa): void => {
+  taskToExclude.value = tarefa;
+};
+
+const saveTask = (tarefa: ITarefa): void => {
+  store.dispatch(CADASTRAR_TAREFAS, tarefa);
+};
+
 </script>
