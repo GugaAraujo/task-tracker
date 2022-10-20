@@ -12,8 +12,16 @@
         </p>
       </div>
       <Box v-if="listaEstaVazia"> ... Não encontrei nada por estas bandas.</Box>
-      <Tarefa v-for="(tarefa, index) in allTasks" :key="index" :task="tarefa" @onClickToExclude="openModalToExclude"
-        @onClickToEdit="selectTask" />
+      <div class="columns is-multiline flex">
+        <div
+          class="mt-2 column is-6 has-text-weight-bold"
+          v-for="(tarefa, index) in allTasks" :key="index"
+        >
+          <Tarefa :task="tarefa" @onClickToExclude="openModalToExclude"
+            @onClickToEdit="selectTask" />
+        </div>
+
+      </div>
       <Modal :showModal="taskToUpdate != null">
         <template v-slot:cabecalho>
           <p class="modal-card-title">Editando uma tarefa</p>
@@ -110,33 +118,26 @@ const deleteTask = (): void => {
     throw new Error();
   }
 };
-
 const closeModal = (): void => {
   taskToUpdate.value = null;
   taskToExclude.value = null;
 };
-
 const getTasks = (): void => {
   store.dispatch(OBTER_TAREFAS);
   closeModal();
 };
-
 const selectTask = (tarefa: ITarefa): void => {
   taskToUpdate.value = tarefa;
 };
-
 const updateTask = (): void => {
   store
     .dispatch(ALTERAR_TAREFA, taskToUpdate.value)
     .then(() => closeModal());
 };
-
 const openModalToExclude = (tarefa: ITarefa): void => {
   taskToExclude.value = tarefa;
 };
-
 const saveTask = (tarefa: ITarefa): void => {
   store.dispatch(CADASTRAR_TAREFAS, tarefa);
 };
-
 </script>

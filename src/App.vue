@@ -3,10 +3,10 @@
     class="columns is-gapless is-multiline"
     :class="{ 'modo-escuro': darkMode }"
   >
-    <div class="column is-one-quarter menu">
+    <div class="column is-one-fifth menu">
       <BarraLateral @aoTemaAlterado="changeTheme" />
     </div>
-    <div class="column is-three-quarter conteudo">
+    <div class="column auto conteudo">
       <notificacoes />
       <router-view></router-view>
     </div>
