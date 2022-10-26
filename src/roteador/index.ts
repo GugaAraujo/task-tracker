@@ -1,11 +1,22 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Tarefas from "../views/Tarefas.vue"
+import Login from "../views/Login.vue";
+import Register from "../views/Register.vue"
 
 const rotas: RouteRecordRaw[] = [
     {
+        path: "/login",
+        name: "Login",
+        component: Login,
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: Register,
+    },
+    {
         path: "/",
         name: "Tarefas",
-        component: Tarefas,
+        component: () => import("../views/Tarefas.vue"),
     },
     {
         path: "/projetos",
@@ -34,11 +45,33 @@ const rotas: RouteRecordRaw[] = [
         name: "Graficos",
         component: () => import("@/views/Graficos.vue"),
     },
+    {
+        path: "/logout",
+        name: "Logout",
+        component: {
+            beforeRouteEnter(to, from, next) {
+                localStorage.removeItem('token');
+                next('/login');
+            },
+        },
+    },
 ];
 
 const roteador = createRouter({
     history: createWebHashHistory(),
     routes: rotas,
+});
+
+roteador.beforeEach((to, from, next) => {
+    const publicPages = ['/login', '/register'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = localStorage.getItem('token');
+
+    if (authRequired && !loggedIn) {
+        next('/login');
+    } else {
+        next();
+    }
 });
 
 export default roteador;
