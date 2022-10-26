@@ -11,22 +11,40 @@
     </div>
     <nav>
       <ul>
-        <li>
+        <li v-if="user">
           <router-link to="/" class="link">
             <i class="fas fa-tasks"></i>
             tarefas
           </router-link>
         </li>
-        <li>
+        <li v-if="user">
           <router-link to="/projetos" class="link">
             <i class="fas fa-folder-open"></i>
             projetos
           </router-link>
         </li>
-        <li>
+        <li v-if="user">
           <router-link to="/graficos" class="link">
             <i class="fas fa-chart-pie"></i>
             relatórios
+          </router-link>
+        </li>
+        <li v-if="user">
+          <router-link to="/logout" class="link">
+            <i class="fas fa-chart-pie"></i>
+            Sair
+          </router-link>
+        </li>
+        <li v-if="!user">
+          <router-link to="/login" class="link">
+            <i class="fas fa-tasks"></i>
+            Entrar
+          </router-link>
+        </li>
+        <li v-if="!user">
+          <router-link to="/register" class="link">
+            <i class="fas fa-tasks"></i>
+            Cadastrar
           </router-link>
         </li>
       </ul>
@@ -35,8 +53,14 @@
 </template>
 
 <script setup lang="ts">
+import IUser from "@/interfaces/IUser";
+import { useStore } from "@/store";
 import Toggle from "@vueform/toggle";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
+
+const store = useStore();
+const user = computed((): IUser[] => store.state.user.user)
+const token = localStorage.getItem('token');
 
 const emit = defineEmits(["aoTemaAlterado"])
 const darkMode = ref(false);
