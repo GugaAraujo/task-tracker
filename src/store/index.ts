@@ -5,11 +5,13 @@ import { INotificacao } from "@/interfaces/INotificacao";
 
 import { EstadoProjeto, projeto } from "./modulos/projetos";
 import { EstadoTarefa, tarefa } from "./modulos/tarefas";
+import { UserState, user } from "./modulos/user";
 
 export interface Estado {
     notificacoes: INotificacao[];
     projeto: EstadoProjeto;
     tarefa: EstadoTarefa;
+    user: UserState;
 }
 
 export const key: InjectionKey<Store<Estado>> = Symbol();
@@ -22,6 +24,9 @@ export const store = createStore<Estado>({
         },
         tarefa: {
             tarefas: [],
+        },
+        user: {
+            user: [],
         },
     } as unknown as Estado,
 
@@ -40,6 +45,7 @@ export const store = createStore<Estado>({
     modules: {
         projeto,
         tarefa,
+        user,
     },
 });
 

@@ -11,22 +11,40 @@
     </div>
     <nav>
       <ul>
-        <li>
+        <li v-if="user">
           <router-link to="/" class="link">
+            <i class="fas fa-chart-pie"></i>
+            relatórios
+          </router-link>
+        </li>
+        <li v-if="user">
+          <router-link to="/tarefas" class="link">
             <i class="fas fa-tasks"></i>
             tarefas
           </router-link>
         </li>
-        <li>
+        <li v-if="user">
           <router-link to="/projetos" class="link">
             <i class="fas fa-folder-open"></i>
             projetos
           </router-link>
         </li>
-        <li>
-          <router-link to="/graficos" class="link">
-            <i class="fas fa-chart-pie"></i>
-            relatórios
+        <li v-if="user">
+          <router-link to="/logout" class="link">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Sair
+          </router-link>
+        </li>
+        <li v-if="!user">
+          <router-link to="/login" class="link">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Entrar
+          </router-link>
+        </li>
+        <li v-if="!user">
+          <router-link to="/register" class="link">
+            <i class="fa-regular fa-id-card"></i>
+            Cadastrar
           </router-link>
         </li>
       </ul>
@@ -35,8 +53,13 @@
 </template>
 
 <script setup lang="ts">
+import IUser from "@/interfaces/IUser";
+import { useStore } from "@/store";
 import Toggle from "@vueform/toggle";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
+
+const store = useStore();
+const user = computed((): IUser[] => store.state.user.user)
 
 const emit = defineEmits(["aoTemaAlterado"])
 const darkMode = ref(false);
@@ -64,6 +87,7 @@ header {
   .brand {
     font-size: 45px;
     color: #fff;
+    margin-top: 10px;
     margin-bottom: 5px;
   }
 

@@ -17,6 +17,11 @@
 import { ref } from "vue";
 import BarraLateral from "./components/BarraLateral.vue";
 import Notificacoes from "./components/Notificacoes.vue";
+import { useStore } from "./store";
+import { GET_TOKEN } from "./store/tipo-acoes";
+
+const store = useStore();
+store.dispatch(GET_TOKEN);
 
 let darkMode = ref(false);
 function changeTheme(changedTheme: boolean): void {

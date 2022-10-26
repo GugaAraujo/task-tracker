@@ -8,4 +8,7 @@ export const ALTERA_TAREFA = "ALTERA_TAREFA";
 export const REMOVE_TAREFA = "REMOVE_TAREFA";
 export const DEFINIR_TAREFAS = "DEFINIR_TAREFAS";
 
+export const ADD_USER = "ADD_USER";
+export const REMOVE_USER = "REMOVE_USER";
+
 export const NOTIFICAR = "NOTIFICAR";
