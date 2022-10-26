@@ -13,6 +13,12 @@
       <ul>
         <li v-if="user">
           <router-link to="/" class="link">
+            <i class="fas fa-chart-pie"></i>
+            relatórios
+          </router-link>
+        </li>
+        <li v-if="user">
+          <router-link to="/tarefas" class="link">
             <i class="fas fa-tasks"></i>
             tarefas
           </router-link>
@@ -24,26 +30,20 @@
           </router-link>
         </li>
         <li v-if="user">
-          <router-link to="/graficos" class="link">
-            <i class="fas fa-chart-pie"></i>
-            relatórios
-          </router-link>
-        </li>
-        <li v-if="user">
           <router-link to="/logout" class="link">
-            <i class="fas fa-chart-pie"></i>
+            <i class="fa-solid fa-right-from-bracket"></i>
             Sair
           </router-link>
         </li>
         <li v-if="!user">
           <router-link to="/login" class="link">
-            <i class="fas fa-tasks"></i>
+            <i class="fa-solid fa-right-to-bracket"></i>
             Entrar
           </router-link>
         </li>
         <li v-if="!user">
           <router-link to="/register" class="link">
-            <i class="fas fa-tasks"></i>
+            <i class="fa-regular fa-id-card"></i>
             Cadastrar
           </router-link>
         </li>
@@ -60,7 +60,6 @@ import { computed, ref, watch } from "vue";
 
 const store = useStore();
 const user = computed((): IUser[] => store.state.user.user)
-const token = localStorage.getItem('token');
 
 const emit = defineEmits(["aoTemaAlterado"])
 const darkMode = ref(false);
@@ -88,6 +87,7 @@ header {
   .brand {
     font-size: 45px;
     color: #fff;
+    margin-top: 10px;
     margin-bottom: 5px;
   }
 
