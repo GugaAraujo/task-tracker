@@ -6,7 +6,7 @@
     <div class="column is-one-fifth menu">
       <BarraLateral @aoTemaAlterado="changeTheme" />
     </div>
-    <div class="column auto conteudo">
+    <div class="column auto conteudo ">
       <notificacoes />
       <router-view></router-view>
     </div>
@@ -34,8 +34,8 @@ function changeTheme(changedTheme: boolean): void {
   padding: 1.25rem;
 }
 main {
-  --bg-primario: #fff;
-  --bg-secundario: #fff;
+  --bg-primario: hsl(0, 0%, 96%);
+  --bg-secundario: hsl(0, 0%, 96%);
   --texto-primario: #000;
 
   width: 100%;

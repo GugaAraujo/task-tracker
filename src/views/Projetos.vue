@@ -1,5 +1,5 @@
 <template>
-    <div class="projetos">
+    <div class="column is-10 container projetos">
         <router-view></router-view>
     </div>
 </template>
