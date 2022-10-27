@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1 class="brand">Task Tracker</h1>
-    <div class="switch-darkmode">
+    <div v-if="false" class="switch-darkmode">
       <p class="mb-2">Dark mode:</p>
       <Toggle v-model="darkMode" class="toggle-blue">
         <template v-slot:label="{ checked, classList }">
@@ -150,9 +150,9 @@ header {
 
       ul li {
         flex-wrap: nowrap;
-        font-size: 18px;
+        font-size: 17px;
         display: inline;
-        margin: 1em;
+        margin: .4em;
       }
     }
   }
