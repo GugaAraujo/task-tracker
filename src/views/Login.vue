@@ -36,7 +36,7 @@ async function login() {
     store.dispatch(LOGIN, {
         email: email.value,
         password: password.value,
-    }).then(() => {
+    }).finally(() => {
         isLoading.value = false;
     });
 }
