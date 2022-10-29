@@ -22,12 +22,12 @@ clientHttp.interceptors.request.use(
 );
 
 clientHttp.interceptors.response.use(null, error => {
-    const { status, message, name, data } = error.response.data;
+    const { status, message, name, data, code } = error.response.data;
     console.log(error.response.data)
 
-    if(status === 401) {
-        roteador.push('/login');
-    } else if (status === 403) {
+    if (code === 401 || status === 401) {
+        roteador.push('/logout');
+    } else if (code === 403 || status === 403) {
         store.commit(NOTIFICAR, {
             titulo: "Não permitido",
             texto: 'Seu usuário não tem permissão para realizar esta operação',
@@ -84,6 +84,14 @@ clientHttp.interceptors.response.use(null, error => {
         if (invalidParameter.message === "The 'email' field must be a valid e-mail.") {
             title = 'E-mail inválido'
             messageToSend = 'Você deve indicar um e-mail válido'
+        }
+        if (invalidParameter.message === "The 'password' field length must be less than or equal to 8 characters long.") {
+            title = 'Senha muito longa'
+            messageToSend = 'A senha deve ter até 8 caracteres'
+        }
+        if (invalidParameter.message === "The 'password' field length must be greater than or equal to 6 characters long.") {
+            title = 'Senha muito curta'
+            messageToSend = 'A senha deve ter ao menos 6 caracteres'
         }
 
         store.commit(NOTIFICAR, {
