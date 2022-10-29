@@ -34,7 +34,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import http from "@/http";
 import { useStore } from "@/store";
 import { REGISTER_USER } from "@/store/tipo-acoes";
 import { ref } from "vue";

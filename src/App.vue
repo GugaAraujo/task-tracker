@@ -1,4 +1,5 @@
 <template>
+  <notificacoes />
   <main
     class="columns is-gapless is-multiline"
     :class="{ 'modo-escuro': darkMode }"
@@ -7,7 +8,6 @@
       <BarraLateral @aoTemaAlterado="changeTheme" />
     </div>
     <div class="column auto conteudo ">
-      <notificacoes />
       <router-view></router-view>
     </div>
   </main>

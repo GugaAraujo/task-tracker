@@ -1,40 +1,30 @@
 <template>
-    <section>
-        <i class="far fa-clock"></i>
-        <span class="time" :class="isRunning ? 'running' : ''">
+    <section
+        :class="applyAnimation ? 'running has-text-weight-medium has-text-success' : ''"
+    >
+        <i :class="applyAnimation ? 'fas fa-spinner fa-spin' : 'far fa-clock'"></i>
+        <span class="time">
             {{ tempoDecorrido }}
         </span>
     </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-export default defineComponent ({
-    name:'Cronometro',
-    props:{
-        timeInSeconds:{
-            type: Number,
-            default: 0
-        }
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
+const props = defineProps<{
+    canAnimate: {
+        type: boolean,
+        default: false,
     },
-    data() {
-        return {
-            isRunning: false
-        }
+    timeInSeconds: {
+        type: number,
+        default: 0,
     },
-    watch:{
-        timeInSeconds(newValue){
-            newValue > 0
-            ? this.isRunning = true
-            : this.isRunning = false
-        }
-    },
-    computed: {
-        tempoDecorrido (): string {
-            return new Date(this.timeInSeconds * 1000 ).toISOString().substr(11,8)
-        }
-    },
-})
+}>()
+const tempoDecorrido = computed(() => new Date((props.timeInSeconds as any)* 1000).toISOString().substr(11, 8))
+const applyAnimation = computed(()=> props.canAnimate && props.timeInSeconds !== 0)
+
 </script>
 
 <style scoped>
@@ -54,10 +44,6 @@ export default defineComponent ({
 
     .time {
         left: -10px;
-    }
-
-    .running {
-        color: rgb(72, 197, 72);
     }
 }
 </style>
