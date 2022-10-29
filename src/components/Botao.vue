@@ -1,7 +1,9 @@
 <template>
-    <button class="button"
+    <button
+        :class="colorWhenActive && !disabled ? colorWhenActive : ''"
+        class="button"
         @click="onClicked"
-        :disabled="desabled"
+        :disabled="disabled"
     >
         <span class="icon">
             <i :class="icon"></i>
@@ -14,9 +16,10 @@
 <script setup lang="ts">
 const emit = defineEmits(['onClicked']);
 defineProps({
-    desabled: Boolean,
+    disabled: Boolean,
     icon: String,
     text: String,
+    colorWhenActive: String,
 })
 function onClicked (): void {
     emit('onClicked')

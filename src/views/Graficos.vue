@@ -138,7 +138,7 @@
         <div class="row">
           <div class="columns">
             <div class="column card-chart-title">
-              <p>Projeto por Tipo</p>
+              <p>Projetos</p>
             </div>
           </div>
         </div>
@@ -200,7 +200,7 @@
         <div class="row">
           <div class="columns">
             <div class="column card-chart-title">
-              <p>Projeto por Tipo</p>
+              <p>Projetos</p>
             </div>
           </div>
         </div>
@@ -286,19 +286,19 @@ function formatHour (data: number): string {
   return new Date(data * 1000).toISOString().substr(11, 8);
 }
 async function getTasks () {
-  return await http.get('/task')
+  return await http.get('/task/all')
     .then((response) => durationList.value = response.data);
 }
 async function getProjects () {
-  return await http.get('/task/count/project')
+  return await http.get('/data/count/name')
     .then((response) => countProjectName.value = response.data);
 }
 async function getTotalDuration () {
-  return await http.get('/task/sum/duration')
+  return await http.get('/data/sum/duration')
     .then((response) => totalDuration.value = response.data?.total);
 }
 async function getLongestTask () {
-  return await http.get('/task/longest')
+  return await http.get('/data/longest/task')
     .then((response) => {
       if (response.data) {
         longestTask.value = response.data

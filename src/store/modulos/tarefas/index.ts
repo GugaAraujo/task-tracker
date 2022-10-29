@@ -42,27 +42,28 @@ export const tarefa: Module<EstadoTarefa, Estado> = {
     },
     actions: {
         [OBTER_TAREFAS]({ commit }, filtro: string) {
+            let url = `task/all`;
             if (filtro) {
-                filtro = `filter=${filtro}`;
+                url = `${url}?filter=${filtro}`;
             }
-            const url = `task?${filtro}`;
+
             http.get(url).then((response) =>
                 commit(DEFINIR_TAREFAS, response.data)
             );
         },
         [CADASTRAR_TAREFAS]({ commit }, tarefa: ITarefa) {
             return http
-                .post("/task", tarefa)
+                .post("/task/create", tarefa)
                 .then((response) => commit(ADICIONA_TAREFA, response.data));
         },
         [ALTERAR_TAREFA]({ commit }, tarefa: ITarefa) {
             return http
-                .put(`/task/${tarefa.id}`, tarefa)
+                .put(`/task/edit/${tarefa.id}`, tarefa)
                 .then(() => commit(ALTERA_TAREFA, tarefa));
         },
         [REMOVER_TAREFA]({ commit }, tarefa: ITarefa) {
             return http
-                .delete(`/task/${tarefa.id}`)
+                .delete(`/task/delete/${tarefa.id}`)
                 .then(() => commit(REMOVE_TAREFA, tarefa))
                 .catch((err) => {
                     console.log(err);

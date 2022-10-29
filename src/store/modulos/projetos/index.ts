@@ -33,21 +33,21 @@ export const projeto: Module<EstadoProjeto, Estado> = {
     },
     actions: {
         [OBTER_PROJETOS]({ commit }) {
-            http.get("/project").then((response) =>
+            http.get("/project/all").then((response) =>
                 commit(DEFINIR_PROJETOS, response.data)
             );
         },
         [CADASTRAR_PROJETOS](contexto, nomeDoProjeto: string) {
-            return http.post("/project", {
+            return http.post("/project/create", {
                 name: nomeDoProjeto,
             });
         },
         [ALTERAR_PROJETO](contexto, projeto: IProjeto) {
-            return http.put(`/project/${projeto.id}`, projeto);
+            return http.put(`/project/edit/${projeto.id}`, projeto);
         },
         [REMOVER_PROJETO]({ commit }, id: string) {
             return http
-                .delete(`/project/${id}`)
+                .delete(`/project/delete/${id}`)
                 .then(() => commit(EXCLUIR_PROJETO, id));
         },
     },

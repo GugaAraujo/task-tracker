@@ -50,13 +50,21 @@
 import { OBTER_PROJETOS, REMOVER_PROJETO } from '@/store/tipo-acoes'
 import { computed } from 'vue'
 import { useStore } from '../../store'
+import useNotificador from "@/hooks/notificador";
+import { TipoNotificacao } from '@/interfaces/INotificacao';
 
 const store = useStore()
+const { notificar } = useNotificador();
 store.dispatch(OBTER_PROJETOS)
 const Allprojects = computed(() => store.state.projeto.projetos);
 
 function exclude (id: string) {
-    store.dispatch(REMOVER_PROJETO, id);
+    store.dispatch(REMOVER_PROJETO, id)
+        .then(() => notificar(
+            TipoNotificacao.SUCESSO,
+            'Projeto excluido',
+            'O projeto excluido com sucesso',
+        ));
 }
 </script>
 

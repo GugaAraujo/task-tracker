@@ -5,7 +5,7 @@ import { NOTIFICAR } from "@/store/tipo-mutacoes";
 import { store } from "@/store"
 
 const clientHttp: AxiosInstance = axios.create({
-    baseURL: "https://task-tracker-api-moleculer.herokuapp.com/api",
+    baseURL: process.env.VUE_APP_API,
 });
 
 clientHttp.interceptors.request.use(
@@ -22,7 +22,7 @@ clientHttp.interceptors.request.use(
 );
 
 clientHttp.interceptors.response.use(null, error => {
-    const { status, message, name } = error.response.data;
+    const { status, message, name, data } = error.response.data;
     console.log(error.response.data)
 
     if(status === 401) {
@@ -77,9 +77,18 @@ clientHttp.interceptors.response.use(null, error => {
         throw new Error(error);
 
     } else if (message === 'Parameters validation error!') {
+        let title = 'Erro';
+        let messageToSend = 'Confira se os campos estão corretos';
+
+        const invalidParameter = data[0];
+        if (invalidParameter.message === "The 'email' field must be a valid e-mail.") {
+            title = 'E-mail inválido'
+            messageToSend = 'Você deve indicar um e-mail válido'
+        }
+
         store.commit(NOTIFICAR, {
-            titulo: "Erro",
-            texto: 'Confira se os campos foram registrados corretamente',
+            titulo: title,
+            texto: messageToSend,
             tipo: TipoNotificacao.FALHA,
         }, { root: true });
         throw new Error(error);

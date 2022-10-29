@@ -7,7 +7,7 @@
           <input type="text" class="input" v-model="projectName" id="projectName" />
         </div>
         <div class="field">
-          <button class="button" type="submit">Salvar</button>
+          <button class="button is-info" :disabled="disabled" type="submit">Salvar</button>
         </div>
       </form>
     </section>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { TipoNotificacao } from "@/interfaces/INotificacao";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "../../store";
 import useNotificador from "@/hooks/notificador";
 import { ALTERAR_PROJETO, CADASTRAR_PROJETOS } from "@/store/tipo-acoes";
@@ -24,13 +24,16 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const store = useStore();
-
+const isLoading = ref(false);
 const props = defineProps<{
   id: string
 }>()
 
 const { notificar } = useNotificador();
 const projectName = ref("");
+
+const disabled = computed(() => isLoading.value || projectName.value.length === 0)
+
 if (props.id) {
   const projeto = store.state.projeto.projetos.find(
     (proj) => proj.id == props.id
@@ -38,26 +41,28 @@ if (props.id) {
   projectName.value = projeto?.name || "";
 }
 
-function saveProject () {
+function saveProject() {
+  isLoading.value = true;
   if (props.id) {
     store
       .dispatch(ALTERAR_PROJETO, {
         id: props.id,
         name: projectName.value,
       })
-      .then(() => onSaveProject());
+      .then(() => onSaveProject('Edição salva', 'Projeto renomeado com sucesso'));
   } else {
     store
       .dispatch(CADASTRAR_PROJETOS, projectName.value)
-      .then(() => onSaveProject());
+      .then(() => onSaveProject('Novo projeto', 'Seu projeto já está disponível'));
   }
 }
-function onSaveProject () {
-  projectName.value = "";
+function onSaveProject (notificationTilte: string, notificationSubtitle: string) {
+  projectName.value = '';
+  isLoading.value = false;
   notificar(
     TipoNotificacao.SUCESSO,
-    "Novo projeto salvo",
-    "Seu projeto já está disponível"
+    notificationTilte,
+    notificationSubtitle,
   );
   router.push("/projetos");
 }

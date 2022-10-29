@@ -103,20 +103,21 @@ store.dispatch(OBTER_TAREFAS)
   .then(() => isLoading.value = false);
 store.dispatch(OBTER_PROJETOS);
 
+const notification = (notificationTilte: string, notificationSubtitle:string): void => {
+  store.commit(NOTIFICAR, {
+    titulo: notificationTilte,
+    texto: notificationSubtitle,
+    tipo: TipoNotificacao.SUCESSO,
+  });
+}
+
 const deleteTask = (): void => {
-  try {
-    store
-      .dispatch(REMOVER_TAREFA, taskToExclude.value)
-      .then(() => getTasks());
-  } catch (error) {
-    closeModal();
-    store.commit(NOTIFICAR, {
-      titulo: "Ops!",
-      texto: "Falha ao deletar",
-      tipo: TipoNotificacao.FALHA,
+  store
+    .dispatch(REMOVER_TAREFA, taskToExclude.value)
+    .then(() => {
+      notification('Tarefa excluída','Tarefa excluída com sucesso')
+      getTasks()
     });
-    throw new Error();
-  }
 };
 const closeModal = (): void => {
   taskToUpdate.value = null;
@@ -132,12 +133,18 @@ const selectTask = (tarefa: ITarefa): void => {
 const updateTask = (): void => {
   store
     .dispatch(ALTERAR_TAREFA, taskToUpdate.value)
-    .then(() => closeModal());
+    .then(() => {
+      notification('Tarefa editada', 'Tarefa editada com sucesso')
+      closeModal()
+    });
 };
 const openModalToExclude = (tarefa: ITarefa): void => {
   taskToExclude.value = tarefa;
 };
 const saveTask = (tarefa: ITarefa): void => {
-  store.dispatch(CADASTRAR_TAREFAS, tarefa);
+  store.dispatch(CADASTRAR_TAREFAS, tarefa)
+    .then(() => {
+      notification('Nova tarefa', 'Sua tarefa já está disponível')
+    });
 };
 </script>

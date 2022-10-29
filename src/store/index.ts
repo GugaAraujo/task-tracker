@@ -1,11 +1,12 @@
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { InjectionKey } from "vue";
-import { NOTIFICAR } from "./tipo-mutacoes";
+import { NOTIFICAR, REMOVE_NOTIFICATION } from "./tipo-mutacoes";
 import { INotificacao } from "@/interfaces/INotificacao";
 
 import { EstadoProjeto, projeto } from "./modulos/projetos";
 import { EstadoTarefa, tarefa } from "./modulos/tarefas";
 import { UserState, user } from "./modulos/user";
+import { CLOSE_NOTIFICATION } from "./tipo-acoes";
 
 export interface Estado {
     notificacoes: INotificacao[];
@@ -39,7 +40,17 @@ export const store = createStore<Estado>({
                 state.notificacoes = state.notificacoes.filter(
                     (notificacao) => notificacao.id != novaNotificacao.id
                 );
-            }, 3000);
+            }, 4000);
+        },
+        [REMOVE_NOTIFICATION](state, notificationId: number) {
+            state.notificacoes = state.notificacoes.filter(
+                (notification) => notification.id != notificationId
+            );
+        },
+    },
+    actions: {
+        [CLOSE_NOTIFICATION]({ commit }, notificationId: number) {
+            commit(REMOVE_NOTIFICATION, notificationId);
         },
     },
     modules: {

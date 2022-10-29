@@ -1,8 +1,22 @@
 <template>
     <div class="is-flex is-align-items-center is-justify-content-space-between">
-        <Cronometro :timeInSeconds="timeInSeconds" />
-        <Botao @onClicked="startCounting" icon="fas fa-play" text="play" :disabled="!EnabledButtons || isCounting" />
-        <Botao @onClicked="stopCounting" icon="fas fa-stop" text="stop" :disabled="!isCounting" />
+        <Cronometro
+            :timeInSeconds="timeInSeconds"
+            :canAnimate="true"
+        />
+        <Botao
+            @onClicked="startCounting"
+            icon="fas fa-play"
+            text="play"
+            :disabled="!EnabledButtons || isCounting"
+        />
+        <Botao
+            @onClicked="stopCounting"
+            icon="fas fa-stop"
+            text="stop"
+            :disabled="!isCounting"
+            colorWhenActive="has-text-danger"
+        />
     </div>
 </template>
 
