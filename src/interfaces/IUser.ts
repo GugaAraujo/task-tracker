@@ -4,4 +4,5 @@ export default interface IUser {
     password: string,
     name: string,
     token: string,
+    first_access?: boolean,
 };

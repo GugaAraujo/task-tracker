@@ -22,7 +22,7 @@ clientHttp.interceptors.request.use(
 );
 
 clientHttp.interceptors.response.use(null, error => {
-    const { status, message, name, data, code } = error.response.data;
+    const { status, message, data, code } = error.response.data;
     console.log(error.response.data)
 
     if (code === 401 || status === 401) {

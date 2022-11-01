@@ -10,6 +10,7 @@ export const DEFINIR_TAREFAS = "DEFINIR_TAREFAS";
 
 export const ADD_USER = "ADD_USER";
 export const REMOVE_USER = "REMOVE_USER";
+export const SET_FIRST_ACCESS = "SET_FIRST_ACCESS";
 
 export const NOTIFICAR = "NOTIFICAR";
 export const REMOVE_NOTIFICATION = "REMOVE_NOTIFICATION";
