@@ -14,19 +14,19 @@
         <li v-if="user">
           <router-link to="/" class="link">
             <i class="fas fa-chart-pie"></i>
-            relatórios
+            Relatórios
           </router-link>
         </li>
         <li v-if="user">
           <router-link to="/tarefas" class="link">
             <i class="fas fa-tasks"></i>
-            tarefas
+            Tarefas
           </router-link>
         </li>
         <li v-if="user">
           <router-link to="/projetos" class="link">
             <i class="fas fa-folder-open"></i>
-            projetos
+            Projetos
           </router-link>
         </li>
         <li v-if="user">
