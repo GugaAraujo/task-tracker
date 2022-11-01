@@ -10,19 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
-    canAnimate: {
-        type: boolean,
-        default: false,
-    },
-    timeInSeconds: {
-        type: number,
-        default: 0,
-    },
+    canAnimate?: boolean,
+    timeInSeconds: number,
 }>()
-const tempoDecorrido = computed(() => new Date((props.timeInSeconds as any)* 1000).toISOString().substr(11, 8))
+const tempoDecorrido = computed(() => new Date(props.timeInSeconds * 1000).toISOString().substr(11, 8))
 const applyAnimation = computed(()=> props.canAnimate && props.timeInSeconds !== 0)
 
 </script>
