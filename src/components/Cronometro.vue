@@ -16,7 +16,7 @@ const props = defineProps<{
     canAnimate?: boolean,
     timeInSeconds: number,
 }>()
-const tempoDecorrido = computed(() => new Date((props.timeInSeconds as any)* 1000).toISOString().substr(11, 8))
+const tempoDecorrido = computed(() => new Date(props.timeInSeconds * 1000).toISOString().substr(11, 8))
 const applyAnimation = computed(()=> props.canAnimate && props.timeInSeconds !== 0)
 
 </script>

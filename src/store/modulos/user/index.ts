@@ -55,7 +55,7 @@ export const user: Module<UserState, Estado> = {
             this.dispatch(REMOVE_FIRST_ACCESS);
         },
         async [REMOVE_FIRST_ACCESS]({ commit }): Promise<void> {
-            await http.put("/users/remove_first_access").then((response) => {
+            await http.put("/users/remove_first_access").then(() => {
                 commit((SET_FIRST_ACCESS), false);
             });
         },

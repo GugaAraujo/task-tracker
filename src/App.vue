@@ -12,19 +12,21 @@
     </div>
       <Modal :showModal="firtsAccess">
         <template v-slot:cabecalho>
-          <p class="modal-card-title">Editando uma tarefa</p>
+          <p class="modal-card-title">Seja bem vindo!</p>
           <button @click="removeFirstAccess" class="delete" aria-label="close"></button>
         </template>
         <template v-slot:corpo>
           <div class="field">
-
+            <p class="mb-5">Oi, {{ user?.username }}!</p>
+            <span>Fico feliz que tenha vindo conhecer este projeto de estudo. </span>
+            <span>Aceita carregar alguns dados de exemplo para testar as possibilidades?</span>
           </div>
         </template>
         <template v-slot:rodape>
           <button @click="removeFirstAccess({ generate: true } )" class="button is-success">
-            Salvar alterações
+            Carregar dados de exemplo
           </button>
-          <button @click="removeFirstAccess" class="button">Cancelar</button>
+          <button @click="removeFirstAccess" class="button">Não, eu prefiro descobrir sozinho</button>
         </template>
       </Modal>
   </main>
@@ -36,12 +38,13 @@ import Modal from "./components/Modal.vue";
 import BarraLateral from "./components/BarraLateral.vue";
 import Notificacoes from "./components/Notificacoes.vue";
 import { useStore } from "./store";
-import { GENERATE_DATA, GET_FIRST_ACCESS, GET_TOKEN, REMOVE_FIRST_ACCESS } from "./store/tipo-acoes";
+import { GENERATE_DATA, GET_FIRST_ACCESS, GET_TOKEN } from "./store/tipo-acoes";
 
 const store = useStore();
 store.dispatch(GET_TOKEN);
 store.dispatch(GET_FIRST_ACCESS);
 const firtsAccess = computed(() => store.state.user.user.first_access || false);
+const user = computed(() => store.state.user.user);
 
 let darkMode = ref(false);
 function changeTheme(changedTheme: boolean): void {
