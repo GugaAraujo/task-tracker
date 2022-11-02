@@ -9,7 +9,6 @@
     </div>
     <div class="column auto conteudo ">
       <router-view></router-view>
-    </div>
       <Modal :showModal="firtsAccess">
         <template v-slot:cabecalho>
           <p class="modal-card-title">Seja bem vindo!</p>
@@ -29,6 +28,7 @@
           <button @click="removeFirstAccess" class="button">Não, eu prefiro descobrir sozinho</button>
         </template>
       </Modal>
+    </div>
   </main>
 </template>
 
@@ -38,11 +38,10 @@ import Modal from "./components/Modal.vue";
 import BarraLateral from "./components/BarraLateral.vue";
 import Notificacoes from "./components/Notificacoes.vue";
 import { useStore } from "./store";
-import { GENERATE_DATA, GET_FIRST_ACCESS, GET_TOKEN } from "./store/tipo-acoes";
+import { GENERATE_DATA, GET_TOKEN } from "./store/tipo-acoes";
 
 const store = useStore();
 store.dispatch(GET_TOKEN);
-store.dispatch(GET_FIRST_ACCESS);
 
 const firtsAccess = computed(() => store.state.user.user?.first_access || false);
 const user = computed(() => store.state.user.user);
