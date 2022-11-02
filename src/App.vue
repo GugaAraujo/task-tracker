@@ -43,6 +43,7 @@ import { GENERATE_DATA, GET_FIRST_ACCESS, GET_TOKEN } from "./store/tipo-acoes";
 const store = useStore();
 store.dispatch(GET_TOKEN);
 store.dispatch(GET_FIRST_ACCESS);
+
 const firtsAccess = computed(() => store.state.user.user?.first_access || false);
 const user = computed(() => store.state.user.user);
 
