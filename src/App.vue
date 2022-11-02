@@ -9,25 +9,27 @@
     </div>
     <div class="column auto conteudo ">
       <router-view></router-view>
-      <Modal :showModal="firtsAccess">
-        <template v-slot:cabecalho>
-          <p class="modal-card-title">Seja bem vindo!</p>
-          <button @click="removeFirstAccess" class="delete" aria-label="close"></button>
-        </template>
-        <template v-slot:corpo>
-          <div class="field">
-            <p class="mb-5">Oi, {{ user?.username }}!</p>
-            <span>Fico feliz que tenha vindo conhecer este projeto de estudo. </span>
-            <span>Aceita carregar alguns dados de exemplo para testar as possibilidades?</span>
-          </div>
-        </template>
-        <template v-slot:rodape>
-          <button @click="removeFirstAccess({ generate: true } )" class="button is-success">
-            Carregar dados de exemplo
-          </button>
-          <button @click="removeFirstAccess" class="button">Não, eu prefiro descobrir sozinho</button>
-        </template>
-      </Modal>
+      <div class="container">
+        <Modal :showModal="firtsAccess">
+          <template v-slot:cabecalho>
+            <p class="modal-card-title">Seja bem vindo!</p>
+            <button @click="removeFirstAccess" class="delete" aria-label="close"></button>
+          </template>
+          <template v-slot:corpo>
+            <div class="field">
+              <p class="mb-5">Oi, {{ user?.username }}!</p>
+              <span>Fico feliz que tenha vindo conhecer este projeto de estudo. </span>
+              <span>Aceita carregar alguns dados de exemplo para testar as possibilidades?</span>
+            </div>
+          </template>
+          <template v-slot:rodape>
+            <button @click="removeFirstAccess({ generate: true } )" class="button is-success">
+              Carregar dados
+            </button>
+            <button @click="removeFirstAccess" class="button">Não carregar</button>
+          </template>
+        </Modal>
+      </div>
     </div>
   </main>
 </template>

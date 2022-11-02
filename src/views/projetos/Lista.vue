@@ -10,21 +10,15 @@
             <thead>
                 <tr>
                     <th>
-                        ID
-                    </th>
-                    <th>
                         Nome
                     </th>
-                    <th>
+                    <th width="40%">
                         Ações
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="projeto in Allprojects" :key="projeto.id">
-                    <td>
-                        {{projeto.id}}
-                    </td>
                     <td>
                         {{projeto.name}}
                     </td>
