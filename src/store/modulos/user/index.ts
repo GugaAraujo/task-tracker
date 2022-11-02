@@ -36,6 +36,9 @@ export const user: Module<UserState, Estado> = {
                 const { token, username } = response.data;
                 const { email } = user;
                 commit((ADD_USER), { email, token, username });
+                setTimeout(() => {
+                    this.dispatch(GET_FIRST_ACCESS);
+                }, 6000);
                 localStorage.setItem('username', username);
                 localStorage.setItem('token', token);
                 localStorage.setItem('email', email);
