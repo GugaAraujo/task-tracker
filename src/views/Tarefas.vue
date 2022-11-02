@@ -24,7 +24,7 @@
       </div>
       <Modal :showModal="taskToUpdate != null">
         <template v-slot:cabecalho>
-          <p class="modal-card-title">Editando uma tarefa</p>
+          <p class="modal-card-title">Editar tarefa</p>
           <button @click="closeModal" class="delete" aria-label="close"></button>
         </template>
         <template v-slot:corpo>
