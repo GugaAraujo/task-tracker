@@ -22,7 +22,7 @@ clientHttp.interceptors.request.use(
 );
 
 clientHttp.interceptors.response.use(null, error => {
-    const { status, message, data, code } = error.response.data;
+    const { status, message, data, code, name, type } = error.response.data;
     console.log(error.response.data)
 
     if (code === 401 || status === 401) {
@@ -33,6 +33,10 @@ clientHttp.interceptors.response.use(null, error => {
             texto: 'Seu usuário não tem permissão para realizar esta operação',
             tipo: TipoNotificacao.FALHA,
         }, { root: true });
+        throw new Error(error);
+    }
+
+    if (name === 'ServiceNotFoundError' || type === 'SERVICE_NOT_FOUND') {
         throw new Error(error);
     }
 
