@@ -1,6 +1,7 @@
 <template>
-    <div class="mt-2 columns">
+    <div class="columns">
         <section class="column is-8 container">
+            <About />
             <form @submit.prevent="register" class="box">
                 <div class="field">
                     <label for="register" class="label"> Username </label>
@@ -39,6 +40,8 @@ import { useStore } from "@/store";
 import { REGISTER_USER } from "@/store/tipo-acoes";
 import { NOTIFICAR } from "@/store/tipo-mutacoes";
 import { ref } from "vue";
+import About from "@/components/About.vue";
+
 const store = useStore();
 
 const username = ref(null);
@@ -69,3 +72,14 @@ async function register() {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.columns {
+	margin: 0;
+
+    @media screen and (min-width: 768px) {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+</style>

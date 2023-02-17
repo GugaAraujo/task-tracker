@@ -1,6 +1,7 @@
 <template>
-    <div class="mt-2 columns">
+    <div class="columns">
         <section class="column is-8 container">
+            <About />
             <form @submit.prevent="login" class="box">
                 <div class="field">
                     <label for="login" class="label"> Email </label>
@@ -25,6 +26,7 @@
 import { useStore } from "@/store";
 import { LOGIN } from "@/store/tipo-acoes";
 import { ref } from "vue";
+import About from "@/components/About.vue";
 
 const store = useStore();
 const email = ref(null);
@@ -42,3 +44,15 @@ async function login() {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.columns {
+    margin-left: 0;
+    margin-right: 0;
+
+    @media screen and (min-width: 768px) {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+</style>

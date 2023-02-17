@@ -107,13 +107,7 @@ clientHttp.interceptors.response.use(null, error => {
         throw new Error(error);
 
     } else {
-        store.commit(NOTIFICAR, {
-            titulo: "Erro",
-            texto: `${message}`,
-            tipo: TipoNotificacao.FALHA,
-        }, { root: true });
         throw new Error(error);
-
     }
 });
 
