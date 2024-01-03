@@ -1,6 +1,6 @@
 # ⏳ Task-Tracker
 
-Task-traker is a task controller, with runtime accounting.<br>
+Task-tracker is a task controller, with runtime accounting.<br>
 Using Vue 3, Vuex, Bulma and AmCharts.
 
 
